@@ -1,1 +1,342 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SERVER HERO PREMIUM V4</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"><link rel="stylesheet" href="style.css"></head><body><div class="background-grid"></div><main class="dashboard"><header class="top-header"><div class="brand"><div class="brand-icon">🖥️</div><div><h1>SERVER HERO PREMIUM</h1><p>Windows Server 2019 Learning Adventure</p></div></div><div class="profile"><div class="avatar">👩‍💻</div><div><strong>AGENT</strong><span id="rank">Beginner</span></div></div></header><section class="stats-grid"><article class="stat-card"><i class="fa-solid fa-star"></i><span>XP</span><strong id="xp">500</strong></article><article class="stat-card"><i class="fa-solid fa-layer-group"></i><span>LEVEL</span><strong id="level">1</strong></article><article class="stat-card"><i class="fa-solid fa-coins"></i><span>COINS</span><strong id="coins">100</strong></article><article class="stat-card"><i class="fa-solid fa-gem"></i><span>GEMS</span><strong id="gems">10</strong></article></section><section class="progress-card"><div class="section-row"><h2>Mission Progress</h2><strong id="percent">0%</strong></div><progress id="progress" value="0" max="100"></progress></section><section class="quick-grid"><article><i class="fa-solid fa-trophy"></i><span>Rank</span><strong id="rankText">Beginner</strong></article><article><i class="fa-solid fa-fire"></i><span>Streak</span><strong id="streak">1 Day</strong></article><article><i class="fa-solid fa-medal"></i><span>Achievements</span><strong id="achievementCount">0</strong></article><article><i class="fa-solid fa-chart-line"></i><span>Completion</span><strong id="completion">0 / 8</strong></article></section><section class="daily-card"><h2>⚡ Today's Mission</h2><p id="dailyMission">Complete one server lesson today.</p></section><section class="title-block"><h2>Available Missions</h2><p>Complete every lesson to become a Windows Server Administrator.</p></section><section id="missions" class="mission-grid"></section><section class="shop-card"><h2><i class="fa-solid fa-store"></i> Premium Shop</h2><div class="shop-grid"><article><h3>Extra Life</h3><p>100 Coins</p><button onclick="buyItem(1)">Buy</button></article><article><h3>Double XP</h3><p>500 Coins</p><button onclick="buyItem(2)">Buy</button></article><article><h3>Golden Badge</h3><p>1000 Coins</p><button onclick="buyItem(3)">Buy</button></article></div></section><section class="menu-panel"><button onclick="exportSave()"><i class="fa-solid fa-download"></i> Export Save</button><button onclick="importSave()"><i class="fa-solid fa-upload"></i> Import Save</button><button onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> Refresh</button><button class="danger" onclick="resetProgress()"><i class="fa-solid fa-trash"></i> Reset Progress</button></section><footer><strong>SERVER HERO PREMIUM V4.0</strong><span>Windows Server 2019 Interactive Learning Platform</span></footer></main><script src="missions.js"></script><script src="app.js"></script></body></html>
+        <!-- ========================================= -->
+        <!-- ACHIEVEMENT PANEL -->
+        <!-- ========================================= -->
+
+        <section class="achievement-panel">
+
+            <div class="panel-title">
+
+                <h2>
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                    Achievements
+
+                </h2>
+
+                <p>
+
+                    Complete missions and collect achievement rewards.
+
+                </p>
+
+            </div>
+
+
+            <div class="achievement-grid">
+
+                <article class="achievement-card">
+
+                    <div class="achievement-icon">
+
+                        🥉
+
+                    </div>
+
+                    <h3>
+
+                        First Mission
+
+                    </h3>
+
+                    <p>
+
+                        Complete Mission 01.
+
+                    </p>
+
+                </article>
+
+
+                <article class="achievement-card">
+
+                    <div class="achievement-icon">
+
+                        🥈
+
+                    </div>
+
+                    <h3>
+
+                        Server Explorer
+
+                    </h3>
+
+                    <p>
+
+                        Complete three missions.
+
+                    </p>
+
+                </article>
+
+
+                <article class="achievement-card">
+
+                    <div class="achievement-icon">
+
+                        🥇
+
+                    </div>
+
+                    <h3>
+
+                        Server Specialist
+
+                    </h3>
+
+                    <p>
+
+                        Complete five missions.
+
+                    </p>
+
+                </article>
+
+
+                <article class="achievement-card">
+
+                    <div class="achievement-icon">
+
+                        💎
+
+                    </div>
+
+                    <h3>
+
+                        Server Hero
+
+                    </h3>
+
+                    <p>
+
+                        Complete all eight missions.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- PREMIUM SHOP -->
+        <!-- ========================================= -->
+
+        <section class="shop-card">
+
+            <div class="panel-title">
+
+                <h2>
+
+                    <i class="fa-solid fa-store"></i>
+
+                    Premium Shop
+
+                </h2>
+
+                <p>
+
+                    Use your coins to purchase special rewards.
+
+                </p>
+
+            </div>
+
+
+            <div class="shop-grid">
+
+                <article>
+
+                    <div class="shop-icon">
+
+                        ❤️
+
+                    </div>
+
+                    <h3>
+
+                        Extra Life
+
+                    </h3>
+
+                    <p>
+
+                        100 Coins
+
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="buyItem(1)"
+                    >
+
+                        Buy
+
+                    </button>
+
+                </article>
+
+
+                <article>
+
+                    <div class="shop-icon">
+
+                        ⭐
+
+                    </div>
+
+                    <h3>
+
+                        Double XP
+
+                    </h3>
+
+                    <p>
+
+                        500 Coins
+
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="buyItem(2)"
+                    >
+
+                        Buy
+
+                    </button>
+
+                </article>
+
+
+                <article>
+
+                    <div class="shop-icon">
+
+                        🏅
+
+                    </div>
+
+                    <h3>
+
+                        Golden Badge
+
+                    </h3>
+
+                    <p>
+
+                        1000 Coins
+
+                    </p>
+
+                    <button
+                        type="button"
+                        onclick="buyItem(3)"
+                    >
+
+                        Buy
+
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- PLAYER MENU -->
+        <!-- ========================================= -->
+
+        <section class="menu-panel">
+
+            <button
+                type="button"
+                onclick="exportSave()"
+            >
+
+                <i class="fa-solid fa-download"></i>
+
+                Export Save
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="importSave()"
+            >
+
+                <i class="fa-solid fa-upload"></i>
+
+                Import Save
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="location.reload()"
+            >
+
+                <i class="fa-solid fa-rotate-right"></i>
+
+                Refresh
+
+            </button>
+
+
+            <button
+                type="button"
+                class="danger"
+                onclick="resetProgress()"
+            >
+
+                <i class="fa-solid fa-trash"></i>
+
+                Reset Progress
+
+            </button>
+
+        </section>
+
+
+        <!-- ========================================= -->
+        <!-- FOOTER -->
+        <!-- ========================================= -->
+
+        <footer>
+
+            <strong>
+
+                SERVER HERO PREMIUM V4.0
+
+            </strong>
+
+            <span>
+
+                Windows Server 2019 Interactive Learning Platform
+
+            </span>
+
+        </footer>
+
+    </main>
+
+
+    <!-- ========================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- missions.js MUST load before app.js -->
+    <!-- ========================================= -->
+
+    <script src="missions.js"></script>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
