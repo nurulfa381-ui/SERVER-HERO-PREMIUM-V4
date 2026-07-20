@@ -1,48 +1,77 @@
 // ======================================================
 // SERVER HERO PREMIUM V4.0
 // storage-engine.js
+// FULL STABLE VERSION
 // ======================================================
 
 "use strict";
 
-const STORAGE_KEYS = {
+const STORAGE_KEYS = Object.freeze({
     player: "serverHeroPlayerV4",
     achievements: "serverHeroAchievementsV4",
     inventory: "serverHeroInventoryV4",
+    missionHistory: "serverHeroMissionHistoryV4",
     exportSave: "serverHeroExportSaveV4",
-    history: "serverHeroMissionHistoryV4",
     dailyBonus: "serverHeroDailyBonusV4",
     doubleXP: "serverHeroDoubleXPV4",
-    goldenBadge: "serverHeroGoldenBadgeV4"
-};
+    goldenBadge: "serverHeroGoldenBadgeV4",
+    extraLife: "serverHeroExtraLifeV4",
+    settings: "serverHeroSettingsV4",
+    analytics: "serverHeroAnalyticsV4"
+});
 
-function readStorageObject(key, fallback = {}) {
+function isPlainObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function readRawStorage(key) {
     try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return { ...fallback };
-
-        const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-            return { ...fallback };
-        }
-
-        return { ...fallback, ...parsed };
+        return localStorage.getItem(key);
     } catch (error) {
-        console.error(`Failed to read ${key}:`, error);
-        return { ...fallback };
+        console.error(`Unable to read storage key "${key}".`, error);
+        return null;
     }
 }
 
-function readStorageArray(key) {
+function writeRawStorage(key, value) {
     try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return [];
-
-        const parsed = JSON.parse(raw);
-        return Array.isArray(parsed) ? parsed : [];
+        localStorage.setItem(key, String(value));
+        return true;
     } catch (error) {
-        console.error(`Failed to read ${key}:`, error);
-        return [];
+        console.error(`Unable to write storage key "${key}".`, error);
+        return false;
+    }
+}
+
+function readStorageObject(key, fallback = {}) {
+    const safeFallback = isPlainObject(fallback) ? fallback : {};
+
+    try {
+        const rawValue = localStorage.getItem(key);
+        if (!rawValue) return { ...safeFallback };
+
+        const parsedValue = JSON.parse(rawValue);
+        if (!isPlainObject(parsedValue)) return { ...safeFallback };
+
+        return { ...safeFallback, ...parsedValue };
+    } catch (error) {
+        console.error(`Unable to read object "${key}".`, error);
+        return { ...safeFallback };
+    }
+}
+
+function readStorageArray(key, fallback = []) {
+    const safeFallback = Array.isArray(fallback) ? fallback : [];
+
+    try {
+        const rawValue = localStorage.getItem(key);
+        if (!rawValue) return [...safeFallback];
+
+        const parsedValue = JSON.parse(rawValue);
+        return Array.isArray(parsedValue) ? parsedValue : [...safeFallback];
+    } catch (error) {
+        console.error(`Unable to read array "${key}".`, error);
+        return [...safeFallback];
     }
 }
 
@@ -51,7 +80,7 @@ function writeStorage(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
         return true;
     } catch (error) {
-        console.error(`Failed to save ${key}:`, error);
+        console.error(`Unable to save "${key}".`, error);
         return false;
     }
 }
@@ -61,79 +90,227 @@ function removeStorage(key) {
         localStorage.removeItem(key);
         return true;
     } catch (error) {
-        console.error(`Failed to remove ${key}:`, error);
+        console.error(`Unable to remove "${key}".`, error);
         return false;
     }
 }
 
-function getMissionCompleteKey(id) {
-    return `lesson${id}Complete`;
+function hasStorageKey(key) {
+    return readRawStorage(key) !== null;
 }
 
-function getMissionRewardKey(id) {
-    return `lesson${id}RewardedV4`;
+function getMissionCompleteKey(missionId) {
+    return `lesson${Number(missionId)}Complete`;
 }
 
-function getMissionUnlockKey(id) {
-    return `lesson${id}Unlocked`;
+function getMissionRewardKey(missionId) {
+    return `lesson${Number(missionId)}RewardedV4`;
 }
 
-function isMissionCompleted(id) {
-    return localStorage.getItem(getMissionCompleteKey(id)) === "true";
+function getMissionUnlockKey(missionId) {
+    return `lesson${Number(missionId)}Unlocked`;
 }
 
-function isMissionRewarded(id) {
-    return localStorage.getItem(getMissionRewardKey(id)) === "true";
+function getMissionQuizKey(missionId) {
+    return `lesson${Number(missionId)}QuizPassedV4`;
 }
 
-function isMissionUnlocked(id) {
-    return Number(id) === 1 || isMissionCompleted(Number(id) - 1);
+function isMissionCompleted(missionId) {
+    return localStorage.getItem(getMissionCompleteKey(missionId)) === "true";
 }
 
-function setMissionCompleted(id) {
-    localStorage.setItem(getMissionCompleteKey(id), "true");
+function isMissionRewarded(missionId) {
+    return localStorage.getItem(getMissionRewardKey(missionId)) === "true";
 }
 
-function setMissionRewarded(id) {
-    localStorage.setItem(getMissionRewardKey(id), "true");
+function isMissionExplicitlyUnlocked(missionId) {
+    return localStorage.getItem(getMissionUnlockKey(missionId)) === "true";
 }
 
-function setMissionUnlocked(id) {
-    localStorage.setItem(getMissionUnlockKey(id), "true");
+function isMissionQuizPassed(missionId) {
+    return localStorage.getItem(getMissionQuizKey(missionId)) === "true";
+}
+
+function isMissionUnlocked(missionId) {
+    const numericMissionId = Number(missionId);
+
+    if (!Number.isInteger(numericMissionId) || numericMissionId < 1) {
+        return false;
+    }
+
+    if (numericMissionId === 1) return true;
+    if (isMissionExplicitlyUnlocked(numericMissionId)) return true;
+
+    return isMissionCompleted(numericMissionId - 1);
+}
+
+function setMissionCompleted(missionId, completed = true) {
+    const key = getMissionCompleteKey(missionId);
+    return completed ? writeRawStorage(key, "true") : removeStorage(key);
+}
+
+function setMissionRewarded(missionId, rewarded = true) {
+    const key = getMissionRewardKey(missionId);
+    return rewarded ? writeRawStorage(key, "true") : removeStorage(key);
+}
+
+function setMissionUnlocked(missionId, unlocked = true) {
+    const key = getMissionUnlockKey(missionId);
+    return unlocked ? writeRawStorage(key, "true") : removeStorage(key);
+}
+
+function setMissionQuizPassed(missionId, passed = true) {
+    const key = getMissionQuizKey(missionId);
+    return passed ? writeRawStorage(key, "true") : removeStorage(key);
+}
+
+function getMissionStorageStatus(missionId) {
+    return {
+        id: Number(missionId),
+        completed: isMissionCompleted(missionId),
+        rewarded: isMissionRewarded(missionId),
+        unlocked: isMissionUnlocked(missionId),
+        quizPassed: isMissionQuizPassed(missionId)
+    };
+}
+
+function getAllMissionStorageStatus() {
+    if (!Array.isArray(window.missions)) return [];
+
+    return window.missions.map((mission) =>
+        getMissionStorageStatus(mission.id)
+    );
+}
+
+function clearMissionStorageById(missionId) {
+    [
+        getMissionCompleteKey(missionId),
+        getMissionRewardKey(missionId),
+        getMissionUnlockKey(missionId),
+        getMissionQuizKey(missionId)
+    ].forEach(removeStorage);
+
+    return true;
 }
 
 function clearMissionStorage() {
-    if (!Array.isArray(window.missions)) return;
+    if (Array.isArray(window.missions)) {
+        window.missions.forEach((mission) => {
+            clearMissionStorageById(mission.id);
+        });
+        return true;
+    }
 
-    window.missions.forEach((mission) => {
-        removeStorage(getMissionCompleteKey(mission.id));
-        removeStorage(getMissionRewardKey(mission.id));
-        removeStorage(getMissionUnlockKey(mission.id));
-    });
+    for (let missionId = 1; missionId <= 50; missionId++) {
+        clearMissionStorageById(missionId);
+    }
+
+    return true;
+}
+
+function exportAllStorage() {
+    const exportedData = {};
+
+    try {
+        for (let index = 0; index < localStorage.length; index++) {
+            const key = localStorage.key(index);
+
+            if (
+                !key ||
+                (!key.startsWith("serverHero") && !key.startsWith("lesson"))
+            ) {
+                continue;
+            }
+
+            exportedData[key] = localStorage.getItem(key);
+        }
+    } catch (error) {
+        console.error("Unable to export storage.", error);
+    }
+
+    return {
+        version: "4.0",
+        exportedAt: new Date().toISOString(),
+        data: exportedData
+    };
+}
+
+function importAllStorage(packageData) {
+    if (!isPlainObject(packageData) || !isPlainObject(packageData.data)) {
+        return false;
+    }
+
+    try {
+        Object.entries(packageData.data).forEach(([key, value]) => {
+            if (typeof value === "string") {
+                localStorage.setItem(key, value);
+            }
+        });
+
+        return true;
+    } catch (error) {
+        console.error("Unable to import storage.", error);
+        return false;
+    }
 }
 
 function clearServerHeroStorage() {
     Object.values(STORAGE_KEYS).forEach(removeStorage);
     clearMissionStorage();
+    return true;
+}
+
+function runStorageHealthCheck() {
+    const testKey = "serverHeroStorageHealthCheck";
+    const testValue = String(Date.now());
+
+    const writeSuccess = writeRawStorage(testKey, testValue);
+    const readSuccess = readRawStorage(testKey) === testValue;
+
+    removeStorage(testKey);
+
+    return {
+        available: writeSuccess && readSuccess,
+        localStorageLength: localStorage.length
+    };
 }
 
 window.SERVER_HERO_STORAGE = {
+    version: "4.0",
     keys: STORAGE_KEYS,
+    readRaw: readRawStorage,
+    writeRaw: writeRawStorage,
     readObject: readStorageObject,
     readArray: readStorageArray,
     write: writeStorage,
     remove: removeStorage,
-    clearAll: clearServerHeroStorage,
-    clearMissions: clearMissionStorage,
+    has: hasStorageKey,
     getMissionCompleteKey,
     getMissionRewardKey,
     getMissionUnlockKey,
+    getMissionQuizKey,
     isMissionCompleted,
     isMissionRewarded,
     isMissionUnlocked,
+    isMissionQuizPassed,
     setMissionCompleted,
     setMissionRewarded,
-    setMissionUnlocked
+    setMissionUnlocked,
+    setMissionQuizPassed,
+    getMissionStatus: getMissionStorageStatus,
+    getAllMissionStatus: getAllMissionStorageStatus,
+    clearMission: clearMissionStorageById,
+    clearMissions: clearMissionStorage,
+    clearAll: clearServerHeroStorage,
+    exportAll: exportAllStorage,
+    importAll: importAllStorage,
+    healthCheck: runStorageHealthCheck
 };
 
+const storageHealth = runStorageHealthCheck();
+
+console.log("======================================");
+console.log("SERVER HERO PREMIUM V4.0");
 console.log("STORAGE ENGINE READY");
+console.log("Storage Available:", storageHealth.available);
+console.log("======================================");
