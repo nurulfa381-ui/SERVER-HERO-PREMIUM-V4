@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Misi 13 SERVER HERO PREMIUM - Final Boss Challenge">
+<title>Misi 13 - Final Boss Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="lesson13.css">
+</head>
+<body>
+<div class="background-grid"></div>
+<div class="background-glow"></div>
+
+<main class="lesson-app">
+
+<nav class="top-nav">
+<button type="button" class="nav-button" onclick="window.location.href='index.html'">
+<i class="fa-solid fa-house"></i> Dashboard
+</button>
+
+<div class="breadcrumb">
+<span>Dashboard</span>
+<i class="fa-solid fa-chevron-right"></i>
+<span>Misi 13</span>
+<i class="fa-solid fa-chevron-right"></i>
+<strong>Final Boss Challenge</strong>
+</div>
+</nav>
+
+<header class="mission-hero boss-hero">
+<div class="hero-icon">👑</div>
+
+<div class="hero-content">
+<span class="mission-label">MISI 13</span>
+<h1>Final Boss Challenge</h1>
+<p>
+Gabungkan semua kemahiran daripada Mission 01 hingga Mission 12
+untuk membina persekitaran Windows Server 2019 yang lengkap, selamat
+dan boleh digunakan oleh organisasi.
+</p>
+
+<div class="hero-tags">
+<span><i class="fa-solid fa-star"></i> 2500 XP</span>
+<span><i class="fa-solid fa-crown"></i> Tahap Final Boss</span>
+<span><i class="fa-solid fa-clock"></i> 60 Minit</span>
+</div>
+</div>
+
+<div class="player-mini-card">
+<span>XP Semasa</span>
+<strong id="playerXP">0</strong>
+<small id="playerRank">Beginner</small>
+</div>
+</header>
+
+<section class="content-card progress-card">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Kemajuan Akhir</span>
+<h2>Boss Battle Progress</h2>
+</div>
+<strong id="lessonProgressText">0%</strong>
+</div>
+
+<progress id="lessonProgress" value="0" max="100"></progress>
+
+<p>
+Lengkapkan simulasi akhir, aktiviti susunan dan lulus kuiz
+dengan markah sekurang-kurangnya 80%.
+</p>
+</section>
+
+<section class="content-card story-card">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Cerita Misi</span>
+<h2>Ancaman Terakhir</h2>
+</div>
+<i class="fa-solid fa-dragon section-icon"></i>
+</div>
+
+<p>
+Server utama organisasi mengalami kegagalan kritikal. Konfigurasi domain,
+DNS, DHCP, perkongsian fail, printer dan backup perlu dibina semula sebelum
+operasi syarikat dapat diteruskan.
+</p>
+
+<p>
+Sebagai Senior Server Administrator, anda perlu menyelesaikan semua konfigurasi
+teras tanpa kesilapan. Hanya agent yang berjaya akan menerima gelaran
+<strong>SERVER HERO MASTER</strong>.
+</p>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Objektif</span>
+<h2>Objektif Final Boss</h2>
+</div>
+<i class="fa-solid fa-bullseye section-icon"></i>
+</div>
+
+<div class="objective-grid">
+<article><span>01</span><p>Menggabungkan semua kemahiran server.</p></article>
+<article><span>02</span><p>Membina konfigurasi domain lengkap.</p></article>
+<article><span>03</span><p>Menyediakan servis rangkaian organisasi.</p></article>
+<article><span>04</span><p>Mengaktifkan backup dan keselamatan.</p></article>
+<article><span>05</span><p>Mengesahkan semua servis berfungsi.</p></article>
+</div>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Peta Cabaran</span>
+<h2>13 Komponen Server Hero</h2>
+</div>
+<i class="fa-solid fa-map section-icon"></i>
+</div>
+
+<div class="challenge-grid">
+<article><span>01</span><h3>Windows Server</h3><p>Install Windows Server 2019.</p></article>
+<article><span>02</span><h3>Static IP</h3><p>192.168.10.10/24.</p></article>
+<article><span>03</span><h3>AD DS</h3><p>Pasang Active Directory.</p></article>
+<article><span>04</span><h3>DNS</h3><p>Konfigurasi serverhero.local.</p></article>
+<article><span>05</span><h3>OU & User</h3><p>Cipta IT Department dan Ali.</p></article>
+<article><span>06</span><h3>Domain Join</h3><p>Join Windows 10 Client.</p></article>
+<article><span>07</span><h3>Group Policy</h3><p>IT Security Policy.</p></article>
+<article><span>08</span><h3>DHCP</h3><p>Scope SERVERHERO-LAN.</p></article>
+<article><span>09</span><h3>File Server</h3><p>Share IT-Share.</p></article>
+<article><span>10</span><h3>Print Server</h3><p>Office Printer.</p></article>
+<article><span>11</span><h3>Backup</h3><p>Full Server Backup.</p></article>
+<article><span>12</span><h3>Security</h3><p>Firewall dan Antivirus.</p></article>
+<article><span>13</span><h3>Monitoring</h3><p>Event Viewer dan CPU.</p></article>
+</div>
+</section>
+
+<section class="tip-card boss-warning">
+<div class="tip-icon">⚔️</div>
+<div>
+<h2>Final Boss Rule</h2>
+<p>
+Semua konfigurasi mesti tepat. Satu kesilapan pada IP, domain,
+permission atau backup boleh menyebabkan keseluruhan sistem gagal.
+</p>
+</div>
+</section>
+
+<section class="content-card simulation-section">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Simulasi Akhir</span>
+<h2>Bina Server Lengkap</h2>
+</div>
+<i class="fa-solid fa-server section-icon"></i>
+</div>
+
+<div class="simulation-grid">
+<label>
+<span>Server Name</span>
+<input id="serverNameInput" type="text" placeholder="SERVER">
+</label>
+
+<label>
+<span>Server IP</span>
+<input id="serverIPInput" type="text" placeholder="192.168.10.10">
+</label>
+
+<label>
+<span>Subnet Mask</span>
+<input id="subnetMaskInput" type="text" placeholder="255.255.255.0">
+</label>
+
+<label>
+<span>Domain Name</span>
+<input id="domainNameInput" type="text" placeholder="serverhero.local">
+</label>
+
+<label>
+<span>Organizational Unit</span>
+<input id="ouNameInput" type="text" placeholder="IT Department">
+</label>
+
+<label>
+<span>Domain User</span>
+<input id="domainUserInput" type="text" placeholder="ali">
+</label>
+
+<label>
+<span>DHCP Scope</span>
+<input id="dhcpScopeInput" type="text" placeholder="SERVERHERO-LAN">
+</label>
+
+<label>
+<span>DHCP Range</span>
+<input id="dhcpRangeInput" type="text" placeholder="192.168.10.100-192.168.10.200">
+</label>
+
+<label>
+<span>GPO Name</span>
+<input id="gpoNameInput" type="text" placeholder="IT Security Policy">
+</label>
+
+<label>
+<span>File Share</span>
+<input id="fileShareInput" type="text" placeholder="\\SERVER\IT-Share">
+</label>
+
+<label>
+<span>Printer Share</span>
+<input id="printerShareInput" type="text" placeholder="\\SERVER\OFFICE-PRINTER">
+</label>
+
+<label>
+<span>Backup Destination</span>
+<input id="backupDestinationInput" type="text" placeholder="E:">
+</label>
+
+<label>
+<span>Firewall Status</span>
+<select id="firewallStatusSelect">
+<option value="">Pilih status</option>
+<option value="on">On</option>
+<option value="off">Off</option>
+</select>
+</label>
+
+<label>
+<span>Monitoring Status</span>
+<select id="monitoringStatusSelect">
+<option value="">Pilih status</option>
+<option value="normal">Normal</option>
+<option value="warning">Warning</option>
+</select>
+</label>
+</div>
+
+<div class="simulation-actions">
+<button type="button" id="testFinalConfigBtn" class="primary-button">
+<i class="fa-solid fa-bolt"></i> Uji Konfigurasi Final Boss
+</button>
+
+<button type="button" id="resetFinalConfigBtn" class="secondary-button">
+<i class="fa-solid fa-rotate-left"></i> Reset Simulasi
+</button>
+</div>
+
+<div id="finalConfigResult" class="feedback-box">
+Lengkapkan semua konfigurasi Final Boss.
+</div>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Aktiviti</span>
+<h2>Susun Aliran Pembangunan Server</h2>
+</div>
+<i class="fa-solid fa-puzzle-piece section-icon"></i>
+</div>
+
+<p>
+Pilih langkah mengikut urutan pembangunan server yang betul.
+</p>
+
+<div id="sequenceActivity" class="sequence-activity">
+<button type="button" data-step="1">Install Windows Server 2019</button>
+<button type="button" data-step="2">Configure Static IP</button>
+<button type="button" data-step="3">Install AD DS dan DNS</button>
+<button type="button" data-step="4">Promote Domain Controller</button>
+<button type="button" data-step="5">Create OU dan User</button>
+<button type="button" data-step="6">Join Windows 10 Client</button>
+<button type="button" data-step="7">Configure Group Policy</button>
+<button type="button" data-step="8">Configure DHCP</button>
+<button type="button" data-step="9">Configure File Server</button>
+<button type="button" data-step="10">Configure Print Server</button>
+<button type="button" data-step="11">Configure Backup</button>
+<button type="button" data-step="12">Enable Security</button>
+<button type="button" data-step="13">Monitor dan Verify Server</button>
+</div>
+
+<div id="sequenceResult" class="feedback-box">
+Pilih semua langkah mengikut urutan.
+</div>
+
+<button type="button" id="resetSequenceBtn" class="secondary-button">
+Reset Aktiviti
+</button>
+</section>
+
+<section class="content-card quiz-section">
+<div class="section-heading">
+<div>
+<span class="section-kicker">Penilaian Akhir</span>
+<h2>Kuiz Final Boss</h2>
+</div>
+<i class="fa-solid fa-crown section-icon"></i>
+</div>
+
+<div class="quiz-info">
+<p>Jawab semua 20 soalan. Markah lulus ialah <strong>80%</strong>.</p>
+<div>
+<span>Soalan</span>
+<strong id="questionCounter">1 / 20</strong>
+</div>
+</div>
+
+<div id="quizContainer" class="quiz-container"></div>
+<div id="quizFeedback" class="feedback-box">Pilih satu jawapan.</div>
+
+<div class="quiz-actions">
+<button type="button" id="previousQuestionBtn" class="secondary-button">
+Sebelumnya
+</button>
+<button type="button" id="nextQuestionBtn" class="primary-button">
+Seterusnya
+</button>
+</div>
+</section>
+
+<section id="resultSection" class="content-card result-section hidden">
+<div class="result-icon">🏆</div>
+<h2 id="resultTitle">Keputusan Final Boss</h2>
+<p id="resultMessage"></p>
+
+<div class="score-display">
+<span>Markah Akhir</span>
+<strong id="finalScore">0%</strong>
+</div>
+
+<button type="button" id="retryQuizBtn" class="secondary-button">
+Ulang Kuiz
+</button>
+</section>
+
+<section id="masterSection" class="content-card master-section hidden">
+<div class="master-crown">👑</div>
+<h2>SERVER HERO MASTER</h2>
+<p>
+Tahniah! Anda telah menguasai semua kemahiran asas Windows Server 2019.
+</p>
+<div class="master-badge">🏅 FINAL BOSS DEFEATED</div>
+</section>
+
+<section class="content-card completion-card">
+<div class="completion-icon">🎖️</div>
+<h2>Penamatan Final Boss</h2>
+<p>
+Lengkapkan simulasi, aktiviti susunan dan kuiz
+untuk menerima gelaran SERVER HERO MASTER.
+</p>
+
+<button type="button" id="completeMissionBtn" class="complete-button" disabled>
+Lengkapkan Misi 13
+</button>
+</section>
+
+<section class="bottom-navigation">
+<button type="button" onclick="window.location.href='index.html'">
+Kembali ke Dashboard
+</button>
+
+<button type="button" id="certificateBtn" disabled>
+Buka Sijil
+</button>
+</section>
+
+</main>
+
+<script src="missions.js"></script>
+<script src="storage-engine.js"></script>
+<script src="player-engine.js"></script>
+<script src="mission-engine.js"></script>
+<script src="achievement-engine.js"></script>
+<script src="ui-engine.js"></script>
+<script src="lesson13.js"></script>
+</body>
+</html>
