@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Misi 11 SERVER HERO PREMIUM - Windows Server Backup dan Restore">
+<title>Misi 11 - Windows Server Backup dan Restore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="lesson11.css">
+</head>
+<body>
+<div class="background-grid"></div>
+<div class="background-glow"></div>
+
+<main class="lesson-app">
+<nav class="top-nav">
+<button type="button" class="nav-button" onclick="window.location.href='index.html'">
+<i class="fa-solid fa-house"></i> Dashboard
+</button>
+<div class="breadcrumb">
+<span>Dashboard</span><i class="fa-solid fa-chevron-right"></i>
+<span>Misi 11</span><i class="fa-solid fa-chevron-right"></i>
+<strong>Backup dan Restore</strong>
+</div>
+</nav>
+
+<header class="mission-hero">
+<div class="hero-icon">💾</div>
+<div class="hero-content">
+<span class="mission-label">MISI 11</span>
+<h1>Windows Server Backup dan Restore</h1>
+<p>Pelajari cara memasang Windows Server Backup, mencipta backup schedule, memilih lokasi backup dan memulihkan data yang hilang.</p>
+<div class="hero-tags">
+<span><i class="fa-solid fa-star"></i> 1100 XP</span>
+<span><i class="fa-solid fa-signal"></i> Tahap Sukar</span>
+<span><i class="fa-solid fa-clock"></i> 45 Minit</span>
+</div>
+</div>
+<div class="player-mini-card">
+<span>XP Semasa</span>
+<strong id="playerXP">0</strong>
+<small id="playerRank">Beginner</small>
+</div>
+</header>
+
+<section class="content-card progress-card">
+<div class="section-heading">
+<div><span class="section-kicker">Kemajuan</span><h2>Kemajuan Pembelajaran</h2></div>
+<strong id="lessonProgressText">0%</strong>
+</div>
+<progress id="lessonProgress" value="0" max="100"></progress>
+<p>Lengkapkan simulasi backup, aktiviti padanan dan lulus kuiz dengan markah sekurang-kurangnya 80%.</p>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div><span class="section-kicker">Cerita Misi</span><h2>Taklimat Agent</h2></div>
+<i class="fa-solid fa-book-open section-icon"></i>
+</div>
+<p>Server organisasi menyimpan konfigurasi domain dan fail penting. Risiko kegagalan cakera, serangan malware atau kesilapan pengguna boleh menyebabkan kehilangan data.</p>
+<p>Tugas anda ialah menyediakan backup harian pada jam <strong>10:00 malam</strong>, memilih <strong>Full Server Backup</strong>, menyimpan backup pada pemacu <strong>E:</strong> dan menguji pemulihan folder <strong>D:\IT-Share</strong>.</p>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div><span class="section-kicker">Objektif</span><h2>Objektif Pembelajaran</h2></div>
+<i class="fa-solid fa-bullseye section-icon"></i>
+</div>
+<div class="objective-grid">
+<article><span>01</span><p>Menjelaskan kepentingan backup server.</p></article>
+<article><span>02</span><p>Memasang Windows Server Backup.</p></article>
+<article><span>03</span><p>Mencipta backup schedule.</p></article>
+<article><span>04</span><p>Memilih lokasi backup yang sesuai.</p></article>
+<article><span>05</span><p>Melaksanakan proses restore.</p></article>
+</div>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div><span class="section-kicker">Nota Ringkas</span><h2>Konsep Penting Backup</h2></div>
+<i class="fa-solid fa-database section-icon"></i>
+</div>
+<div class="note-grid">
+<article><i class="fa-solid fa-box-archive"></i><h3>Full Backup</h3><p>Menyalin keseluruhan data dan konfigurasi server.</p></article>
+<article><i class="fa-solid fa-clock-rotate-left"></i><h3>Backup Schedule</h3><p>Menjalankan backup secara automatik mengikut masa ditetapkan.</p></article>
+<article><i class="fa-solid fa-hard-drive"></i><h3>Backup Destination</h3><p>Lokasi fizikal atau rangkaian untuk menyimpan backup.</p></article>
+<article><i class="fa-solid fa-rotate-left"></i><h3>Restore</h3><p>Memulihkan fail, folder atau sistem daripada backup.</p></article>
+<article><i class="fa-solid fa-shield-halved"></i><h3>System State</h3><p>Menyimpan komponen kritikal seperti registry dan Active Directory.</p></article>
+<article><i class="fa-solid fa-circle-check"></i><h3>Verification</h3><p>Mengesahkan backup boleh digunakan ketika pemulihan.</p></article>
+</div>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div><span class="section-kicker">Prosedur</span><h2>Langkah Backup dan Restore</h2></div>
+<i class="fa-solid fa-list-check section-icon"></i>
+</div>
+<div class="steps-list">
+<article class="step-item"><div class="step-number">1</div><div><h3>Pasang Windows Server Backup</h3><p>Gunakan Add Roles and Features dan pilih Windows Server Backup.</p></div></article>
+<article class="step-item"><div class="step-number">2</div><div><h3>Buka Windows Server Backup</h3><p>Pilih Local Backup pada panel kiri.</p></div></article>
+<article class="step-item"><div class="step-number">3</div><div><h3>Pilih Backup Schedule</h3><p>Tetapkan backup dijalankan setiap hari.</p></div></article>
+<article class="step-item"><div class="step-number">4</div><div><h3>Pilih Full Server</h3><p>Pastikan semua volume dan komponen kritikal disertakan.</p></div></article>
+<article class="step-item"><div class="step-number">5</div><div><h3>Tetapkan Masa</h3><p>Gunakan masa 10:00 malam.</p></div></article>
+<article class="step-item"><div class="step-number">6</div><div><h3>Pilih Lokasi Backup</h3><p>Simpan backup pada pemacu E:.</p></div></article>
+<article class="step-item"><div class="step-number">7</div><div><h3>Jalankan Backup</h3><p>Pastikan status menunjukkan Completed Successfully.</p></div></article>
+<article class="step-item"><div class="step-number">8</div><div><h3>Uji Restore</h3><p>Pulihkan folder D:\IT-Share dan semak kandungannya.</p></div></article>
+</div>
+</section>
+
+<section class="tip-card">
+<div class="tip-icon">⚠️</div>
+<div>
+<h2>Tip Penting</h2>
+<p>Backup mesti disimpan pada pemacu atau lokasi berasingan daripada data asal. Backup pada cakera yang sama tidak melindungi daripada kegagalan cakera.</p>
+</div>
+</section>
+
+<section class="content-card simulation-section">
+<div class="section-heading">
+<div><span class="section-kicker">Simulasi</span><h2>Konfigurasi Backup Schedule</h2></div>
+<i class="fa-solid fa-gears section-icon"></i>
+</div>
+
+<div class="simulation-grid">
+<label><span>Jenis Backup</span>
+<select id="backupTypeSelect">
+<option value="">Pilih jenis backup</option>
+<option value="full-server">Full Server Backup</option>
+<option value="custom">Custom Backup</option>
+</select>
+</label>
+
+<label><span>Backup Frequency</span>
+<select id="backupFrequencySelect">
+<option value="">Pilih kekerapan</option>
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+</select>
+</label>
+
+<label><span>Masa Backup</span>
+<input id="backupTimeInput" type="text" placeholder="22:00">
+</label>
+
+<label><span>Lokasi Backup</span>
+<input id="backupDestinationInput" type="text" placeholder="E:">
+</label>
+
+<label><span>Folder Restore</span>
+<input id="restorePathInput" type="text" placeholder="D:\IT-Share">
+</label>
+
+<label><span>Status Backup</span>
+<select id="backupStatusSelect">
+<option value="">Pilih status</option>
+<option value="success">Completed Successfully</option>
+<option value="failed">Failed</option>
+</select>
+</label>
+
+<label><span>Status Restore</span>
+<select id="restoreStatusSelect">
+<option value="">Pilih status</option>
+<option value="restored">Restore Berjaya</option>
+<option value="not-restored">Belum Restore</option>
+</select>
+</label>
+
+<label><span>Verification</span>
+<select id="verificationSelect">
+<option value="">Pilih keputusan</option>
+<option value="verified">Backup Verified</option>
+<option value="not-verified">Not Verified</option>
+</select>
+</label>
+</div>
+
+<div class="simulation-actions">
+<button type="button" id="testBackupBtn" class="primary-button">Uji Konfigurasi Backup</button>
+<button type="button" id="resetBackupBtn" class="secondary-button">Reset Simulasi</button>
+</div>
+
+<div id="backupResult" class="feedback-box">Lengkapkan semua tetapan backup.</div>
+</section>
+
+<section class="content-card">
+<div class="section-heading">
+<div><span class="section-kicker">Aktiviti</span><h2>Padankan Komponen Backup</h2></div>
+<i class="fa-solid fa-puzzle-piece section-icon"></i>
+</div>
+
+<div id="matchingActivity" class="matching-activity">
+<article><h3>Full Backup</h3><select data-answer="all-data"><option value="">Pilih fungsi</option><option value="all-data">Menyalin semua data</option><option value="automatic-time">Menjalankan backup mengikut masa</option><option value="recover-data">Memulihkan data</option><option value="critical-components">Menyimpan komponen sistem kritikal</option></select></article>
+<article><h3>Backup Schedule</h3><select data-answer="automatic-time"><option value="">Pilih fungsi</option><option value="all-data">Menyalin semua data</option><option value="automatic-time">Menjalankan backup mengikut masa</option><option value="recover-data">Memulihkan data</option><option value="critical-components">Menyimpan komponen sistem kritikal</option></select></article>
+<article><h3>Restore</h3><select data-answer="recover-data"><option value="">Pilih fungsi</option><option value="all-data">Menyalin semua data</option><option value="automatic-time">Menjalankan backup mengikut masa</option><option value="recover-data">Memulihkan data</option><option value="critical-components">Menyimpan komponen sistem kritikal</option></select></article>
+<article><h3>System State</h3><select data-answer="critical-components"><option value="">Pilih fungsi</option><option value="all-data">Menyalin semua data</option><option value="automatic-time">Menjalankan backup mengikut masa</option><option value="recover-data">Memulihkan data</option><option value="critical-components">Menyimpan komponen sistem kritikal</option></select></article>
+</div>
+
+<button type="button" id="checkMatchingBtn" class="primary-button">Semak Padanan</button>
+<div id="matchingResult" class="feedback-box">Lengkapkan semua padanan.</div>
+</section>
+
+<section class="content-card quiz-section">
+<div class="section-heading">
+<div><span class="section-kicker">Penilaian</span><h2>Kuiz Misi 11</h2></div>
+<i class="fa-solid fa-circle-question section-icon"></i>
+</div>
+<div class="quiz-info">
+<p>Jawab semua 10 soalan. Markah lulus ialah <strong>80%</strong>.</p>
+<div><span>Soalan</span><strong id="questionCounter">1 / 10</strong></div>
+</div>
+<div id="quizContainer" class="quiz-container"></div>
+<div id="quizFeedback" class="feedback-box">Pilih satu jawapan.</div>
+<div class="quiz-actions">
+<button type="button" id="previousQuestionBtn" class="secondary-button">Sebelumnya</button>
+<button type="button" id="nextQuestionBtn" class="primary-button">Seterusnya</button>
+</div>
+</section>
+
+<section id="resultSection" class="content-card result-section hidden">
+<div class="result-icon">🏆</div>
+<h2 id="resultTitle">Keputusan Kuiz</h2>
+<p id="resultMessage"></p>
+<div class="score-display"><span>Markah</span><strong id="finalScore">0%</strong></div>
+<button type="button" id="retryQuizBtn" class="secondary-button">Ulang Kuiz</button>
+</section>
+
+<section class="content-card completion-card">
+<div class="completion-icon">🎖️</div>
+<h2>Penamatan Misi</h2>
+<p>Lengkapkan simulasi, aktiviti padanan dan kuiz untuk membuka butang penamatan misi.</p>
+<button type="button" id="completeMissionBtn" class="complete-button" disabled>Lengkapkan Misi 11</button>
+</section>
+
+<section class="bottom-navigation">
+<button type="button" onclick="window.location.href='index.html'">Kembali ke Dashboard</button>
+<button type="button" id="nextMissionBtn" disabled>Misi Seterusnya</button>
+</section>
+</main>
+
+<script src="missions.js"></script>
+<script src="storage-engine.js"></script>
+<script src="player-engine.js"></script>
+<script src="mission-engine.js"></script>
+<script src="achievement-engine.js"></script>
+<script src="ui-engine.js"></script>
+<script src="lesson11.js"></script>
+</body>
+</html>
