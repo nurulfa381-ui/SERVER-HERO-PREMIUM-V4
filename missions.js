@@ -1,7 +1,7 @@
 // ======================================================
-// SERVER HERO PREMIUM V4.0
+// SERVER HERO PREMIUM V5.0
 // missions.js
-// FINAL MISSION DATABASE
+// FULL DATABASE - 13 MISSIONS
 // ======================================================
 
 "use strict";
@@ -11,7 +11,7 @@
 // MISSION DATABASE
 // ======================================================
 
-const missions = Object.freeze([
+const missions = [
 
     {
 
@@ -19,31 +19,28 @@ const missions = Object.freeze([
             1,
 
         title:
-            "MISSION 01",
+            "MISI 01",
 
         subtitle:
-            "Install Windows Server 2019",
+            "Pasang Windows Server 2019",
 
         description:
-            "Install Windows Server 2019 and prepare the operating system for server deployment.",
+            "Pasang Windows Server 2019 dan sediakan sistem operasi untuk konfigurasi server.",
 
         xp:
-            250,
+            500,
 
         coins:
-            50,
+            0,
 
         gems:
-            2,
+            0,
 
         difficulty:
-            "Easy",
+            "Mudah",
 
         duration:
-            "20 Minutes",
-
-        category:
-            "Operating System",
+            "25 Minit",
 
         icon:
             "💻",
@@ -59,31 +56,28 @@ const missions = Object.freeze([
             2,
 
         title:
-            "MISSION 02",
+            "MISI 02",
 
         subtitle:
-            "Configure Static IP Address",
+            "Konfigurasi Alamat IP Statik",
 
         description:
-            "Configure a static IPv4 address, subnet mask, default gateway and preferred DNS server.",
+            "Tetapkan alamat IPv4 statik, subnet mask, default gateway dan DNS server.",
 
         xp:
-            300,
+            600,
 
         coins:
-            60,
+            0,
 
         gems:
-            2,
+            0,
 
         difficulty:
-            "Easy",
+            "Mudah",
 
         duration:
-            "20 Minutes",
-
-        category:
-            "Networking",
+            "25 Minit",
 
         icon:
             "🌐",
@@ -99,31 +93,28 @@ const missions = Object.freeze([
             3,
 
         title:
-            "MISSION 03",
+            "MISI 03",
 
         subtitle:
-            "Install Active Directory Domain Services",
+            "Pasang Active Directory Domain Services",
 
         description:
-            "Install the AD DS role and promote the server as a Domain Controller for serverhero.local.",
+            "Pasang peranan AD DS dan sediakan Active Directory untuk persekitaran domain.",
 
         xp:
-            450,
+            800,
 
         coins:
-            75,
+            0,
 
         gems:
-            3,
+            0,
 
         difficulty:
-            "Medium",
+            "Sederhana",
 
         duration:
-            "30 Minutes",
-
-        category:
-            "Active Directory",
+            "35 Minit",
 
         icon:
             "🏢",
@@ -139,31 +130,28 @@ const missions = Object.freeze([
             4,
 
         title:
-            "MISSION 04",
+            "MISI 04",
 
         subtitle:
-            "Configure DNS Server",
+            "Konfigurasi DNS Server",
 
         description:
-            "Configure DNS zones, host records and verify domain name resolution using nslookup.",
+            "Konfigurasi DNS, Forward Lookup Zone dan uji resolusi nama domain.",
 
         xp:
-            450,
+            700,
 
         coins:
-            75,
+            0,
 
         gems:
-            3,
+            0,
 
         difficulty:
-            "Medium",
+            "Sederhana",
 
         duration:
-            "30 Minutes",
-
-        category:
-            "DNS",
+            "35 Minit",
 
         icon:
             "🛰️",
@@ -179,34 +167,31 @@ const missions = Object.freeze([
             5,
 
         title:
-            "MISSION 05",
+            "MISI 05",
 
         subtitle:
-            "Configure DHCP Server",
+            "Cipta OU dan Akaun Pengguna",
 
         description:
-            "Install DHCP Server, authorize the service, create an IPv4 scope and activate it.",
+            "Cipta Organizational Unit, akaun pengguna dan kumpulan dalam Active Directory.",
 
         xp:
-            500,
+            700,
 
         coins:
-            90,
+            0,
 
         gems:
-            4,
+            0,
 
         difficulty:
-            "Medium",
+            "Sederhana",
 
         duration:
-            "35 Minutes",
-
-        category:
-            "DHCP",
+            "35 Minit",
 
         icon:
-            "📡",
+            "👥",
 
         page:
             "lesson5.html"
@@ -219,34 +204,31 @@ const missions = Object.freeze([
             6,
 
         title:
-            "MISSION 06",
+            "MISI 06",
 
         subtitle:
-            "Create Organizational Unit and User",
+            "Join Windows 10 Client ke Domain",
 
         description:
-            "Create Organizational Units, users and groups in Active Directory and organize domain resources.",
+            "Sambungkan komputer Windows 10 Client kepada domain serverhero.local dan uji log masuk domain.",
 
         xp:
-            600,
+            1200,
 
         coins:
-            100,
+            0,
 
         gems:
-            5,
+            0,
 
         difficulty:
-            "Hard",
+            "Sukar",
 
         duration:
-            "40 Minutes",
-
-        category:
-            "Active Directory",
+            "45 Minit",
 
         icon:
-            "👥",
+            "🖥️",
 
         page:
             "lesson6.html"
@@ -259,34 +241,31 @@ const missions = Object.freeze([
             7,
 
         title:
-            "MISSION 07",
+            "MISI 07",
 
         subtitle:
-            "Join Windows 10 Client to Domain",
+            "Konfigurasi Group Policy",
 
         description:
-            "Configure the Windows 10 client and join it to the serverhero.local Active Directory domain.",
+            "Cipta Group Policy Object, link kepada OU dan gunakan polisi keselamatan pengguna.",
 
         xp:
             700,
 
         coins:
-            120,
+            0,
 
         gems:
-            5,
+            0,
 
         difficulty:
-            "Hard",
+            "Sukar",
 
         duration:
-            "40 Minutes",
-
-        category:
-            "Client Integration",
+            "40 Minit",
 
         icon:
-            "🖥️",
+            "🛡️",
 
         page:
             "lesson7.html"
@@ -299,41 +278,223 @@ const missions = Object.freeze([
             8,
 
         title:
-            "MISSION 08",
+            "MISI 08",
 
         subtitle:
-            "Final Server Validation",
+            "Konfigurasi DHCP Server",
 
         description:
-            "Validate Active Directory, DNS, DHCP, domain logon and client connectivity before completing the training.",
+            "Pasang DHCP Server, cipta scope dan berikan alamat IP secara automatik kepada client.",
+
+        xp:
+            800,
+
+        coins:
+            0,
+
+        gems:
+            0,
+
+        difficulty:
+            "Sukar",
+
+        duration:
+            "45 Minit",
+
+        icon:
+            "📡",
+
+        page:
+            "lesson8.html"
+
+    },
+
+    {
+
+        id:
+            9,
+
+        title:
+            "MISI 09",
+
+        subtitle:
+            "File Server dan Shared Folder",
+
+        description:
+            "Sediakan folder perkongsian, Share Permission, NTFS Permission dan uji akses client.",
+
+        xp:
+            900,
+
+        coins:
+            0,
+
+        gems:
+            0,
+
+        difficulty:
+            "Sukar",
+
+        duration:
+            "45 Minit",
+
+        icon:
+            "📁",
+
+        page:
+            "lesson9.html"
+
+    },
+
+    {
+
+        id:
+            10,
+
+        title:
+            "MISI 10",
+
+        subtitle:
+            "Konfigurasi Print Server",
+
+        description:
+            "Tambah pencetak rangkaian, pasang driver, kongsi printer dan uji cetakan client.",
 
         xp:
             1000,
 
         coins:
-            200,
+            0,
 
         gems:
-            10,
+            0,
 
         difficulty:
-            "Expert",
+            "Sukar",
 
         duration:
-            "60 Minutes",
-
-        category:
-            "Validation",
+            "45 Minit",
 
         icon:
-            "🏆",
+            "🖨️",
 
         page:
-            "lesson8.html"
+            "lesson10.html"
+
+    },
+
+    {
+
+        id:
+            11,
+
+        title:
+            "MISI 11",
+
+        subtitle:
+            "Windows Server Backup dan Restore",
+
+        description:
+            "Cipta backup schedule, simpan Full Server Backup dan uji proses pemulihan data.",
+
+        xp:
+            1100,
+
+        coins:
+            0,
+
+        gems:
+            0,
+
+        difficulty:
+            "Sukar",
+
+        duration:
+            "45 Minit",
+
+        icon:
+            "💾",
+
+        page:
+            "lesson11.html"
+
+    },
+
+    {
+
+        id:
+            12,
+
+        title:
+            "MISI 12",
+
+        subtitle:
+            "Server Security dan Monitoring",
+
+        description:
+            "Aktifkan firewall, antivirus dan Windows Update serta pantau log dan prestasi server.",
+
+        xp:
+            1200,
+
+        coins:
+            0,
+
+        gems:
+            0,
+
+        difficulty:
+            "Pakar",
+
+        duration:
+            "50 Minit",
+
+        icon:
+            "🔒",
+
+        page:
+            "lesson12.html"
+
+    },
+
+    {
+
+        id:
+            13,
+
+        title:
+            "MISI 13",
+
+        subtitle:
+            "Final Boss Challenge",
+
+        description:
+            "Gabungkan semua kemahiran untuk membina, menguji dan melindungi Windows Server 2019.",
+
+        xp:
+            2500,
+
+        coins:
+            0,
+
+        gems:
+            0,
+
+        difficulty:
+            "Final Boss",
+
+        duration:
+            "60 Minit",
+
+        icon:
+            "👑",
+
+        page:
+            "lesson13.html"
 
     }
 
-]);
+];
 
 
 // ======================================================
@@ -354,7 +515,15 @@ const totalMissionXP =
 
             total +
 
-            mission.xp,
+            (
+
+                Number(
+
+                    mission.xp
+
+                ) || 0
+
+            ),
 
         0
 
@@ -363,111 +532,121 @@ const totalMissionXP =
 
 const totalMissionCoins =
 
-    missions.reduce(
-
-        (
-
-            total,
-
-            mission
-
-        ) =>
-
-            total +
-
-            mission.coins,
-
-        0
-
-    );
+    0;
 
 
 const totalMissionGems =
 
-    missions.reduce(
+    0;
 
-        (
 
-            total,
+// ======================================================
+// DATA VALIDATION
+// ======================================================
 
-            mission
+function validateMissionDatabase() {
 
-        ) =>
+    const ids =
 
-            total +
+        new Set();
 
-            mission.gems,
+    missions.forEach(
 
-        0
+        mission => {
+
+            if (
+
+                !Number.isInteger(
+
+                    mission.id
+
+                ) ||
+
+                mission.id < 1
+
+            ) {
+
+                throw new Error(
+
+                    "ID misi tidak sah."
+
+                );
+
+            }
+
+            if (
+
+                ids.has(
+
+                    mission.id
+
+                )
+
+            ) {
+
+                throw new Error(
+
+                    `ID misi berulang: ${mission.id}`
+
+                );
+
+            }
+
+            ids.add(
+
+                mission.id
+
+            );
+
+            if (
+
+                !mission.title ||
+
+                !mission.subtitle ||
+
+                !mission.page
+
+            ) {
+
+                throw new Error(
+
+                    `Data Misi ${mission.id} tidak lengkap.`
+
+                );
+
+            }
+
+        }
 
     );
 
-
-// ======================================================
-// MISSION HELPERS
-// ======================================================
-
-function getMissionById(
-
-    missionId
-
-) {
-
-    return missions.find(
-
-        mission =>
-
-            mission.id ===
-
-            Number(missionId)
-
-    ) || null;
+    return true;
 
 }
 
 
-function getMissionByPage(
-
-    pageName
-
-) {
-
-    return missions.find(
-
-        mission =>
-
-            mission.page ===
-
-            String(pageName)
-
-    ) || null;
-
-}
-
-
-function getMissionCount() {
-
-    return missions.length;
-
-}
+validateMissionDatabase();
 
 
 // ======================================================
-// GLOBAL MISSION DATABASE
+// GLOBAL MISSION API
 // ======================================================
 
-window.missions = missions;
+window.missions =
+
+    missions;
+
 
 window.SERVER_HERO_MISSIONS = {
 
     version:
-        "4.0",
+        "5.0",
 
     all:
         missions,
 
     total:
-        getMissionCount(),
+        missions.length,
 
     totalXP:
         totalMissionXP,
@@ -478,17 +657,115 @@ window.SERVER_HERO_MISSIONS = {
     totalGems:
         totalMissionGems,
 
-    getById:
-        getMissionById,
+    getById(
 
-    getByPage:
-        getMissionByPage
+        missionId
+
+    ) {
+
+        return missions.find(
+
+            mission =>
+
+                mission.id ===
+
+                Number(
+
+                    missionId
+
+                )
+
+        ) || null;
+
+    },
+
+    getNext(
+
+        missionId
+
+    ) {
+
+        const index =
+
+            missions.findIndex(
+
+                mission =>
+
+                    mission.id ===
+
+                    Number(
+
+                        missionId
+
+                    )
+
+            );
+
+        if (
+
+            index < 0 ||
+
+            index >= missions.length - 1
+
+        ) {
+
+            return null;
+
+        }
+
+        return missions[
+
+            index + 1
+
+        ];
+
+    },
+
+    getPrevious(
+
+        missionId
+
+    ) {
+
+        const index =
+
+            missions.findIndex(
+
+                mission =>
+
+                    mission.id ===
+
+                    Number(
+
+                        missionId
+
+                    )
+
+            );
+
+        if (
+
+            index <= 0
+
+        ) {
+
+            return null;
+
+        }
+
+        return missions[
+
+            index - 1
+
+        ];
+
+    }
 
 };
 
 
 // ======================================================
-// INITIALIZATION
+// STATUS
 // ======================================================
 
 console.log(
@@ -499,19 +776,19 @@ console.log(
 
 console.log(
 
-    "SERVER HERO PREMIUM V4.0"
+    "SERVER HERO PREMIUM V5.0"
 
 );
 
 console.log(
 
-    "FINAL MISSION DATABASE READY"
+    "DATABASE 13 MISI SEDIA"
 
 );
 
 console.log(
 
-    "Total Missions:",
+    "Jumlah Misi:",
 
     missions.length
 
@@ -519,25 +796,9 @@ console.log(
 
 console.log(
 
-    "Total XP:",
+    "Jumlah XP:",
 
     totalMissionXP
-
-);
-
-console.log(
-
-    "Total Coins:",
-
-    totalMissionCoins
-
-);
-
-console.log(
-
-    "Total Gems:",
-
-    totalMissionGems
 
 );
 
