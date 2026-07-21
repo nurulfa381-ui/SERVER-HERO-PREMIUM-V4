@@ -1,1284 +1,1162 @@
 // ======================================================
-// SERVER HERO PREMIUM V5.0
-// app.js
-// FINAL INTEGRATION CONTROLLER
+// SERVER HERO PREMIUM V5.2
+// app.js - FINAL COMPATIBLE DASHBOARD CONTROLLER
+// 13 MISSIONS + STUDENT LOGIN
 // ======================================================
 
 "use strict";
 
 
 // ======================================================
-// ENGINE REQUIREMENTS
+// DATABASE CHECK
 // ======================================================
 
-const REQUIRED_ENGINES = [
+const MISSION_LIST = Array.isArray(window.missions)
+    ? window.missions
+    : [];
 
-    "SERVER_HERO_STORAGE",
-
-    "SERVER_HERO_PLAYER",
-
-    "SERVER_HERO_MISSION_ENGINE",
-
-    "SERVER_HERO_ACHIEVEMENTS",
-
-    "SERVER_HERO_UI",
-
-    "SERVER_HERO_CERTIFICATE",
-
-    "SERVER_HERO_REPORT"
-
-];
+if (MISSION_LIST.length === 0) {
+    console.error(
+        "SERVER HERO: missions.js tidak dimuatkan atau senarai misi kosong."
+    );
+}
 
 
-REQUIRED_ENGINES.forEach(
+// ======================================================
+// STORAGE KEYS
+// ======================================================
 
-    engineName => {
+const STORAGE_KEYS = Object.freeze({
+    player: "serverHeroPlayerV4",
+    achievements: "serverHeroAchievementsV4",
+    history: "serverHeroHistoryV4",
+    studentName: "serverHeroStudentNameV5",
+    masterUnlocked: "serverHeroMasterUnlockedV4"
+});
 
-        if (
+const DEFAULT_PLAYER = Object.freeze({
+    name: "AGENT",
+    xp: 500,
+    level: 1,
+    completed: 0,
+    streak: 1,
+    rank: "Beginner"
+});
 
-            !window[engineName]
+const ACHIEVEMENTS = Object.freeze([
+    {
+        id: "first-mission",
+        title: "Misi Pertama",
+        target: 1,
+        rewardXP: 100
+    },
+    {
+        id: "server-explorer",
+        title: "Server Explorer",
+        target: 3,
+        rewardXP: 250
+    },
+    {
+        id: "server-specialist",
+        title: "Server Specialist",
+        target: 5,
+        rewardXP: 400
+    },
+    {
+        id: "server-hero",
+        title: "Server Hero",
+        target: 8,
+        rewardXP: 800
+    },
+    {
+        id: "server-master",
+        title: "Server Hero Master",
+        target: 13,
+        rewardXP: 1500
+    }
+]);
 
-        ) {
 
-            throw new Error(
+// ======================================================
+// STORAGE HELPERS
+// ======================================================
 
-                `${engineName} belum dimuatkan. Semak susunan script dalam index.html.`
+function readJSON(key, fallback) {
+    try {
+        const raw = localStorage.getItem(key);
 
-            );
-
+        if (!raw) {
+            return fallback;
         }
 
-    }
+        const parsed = JSON.parse(raw);
 
+        return parsed ?? fallback;
+    } catch (error) {
+        console.warn(`Gagal membaca ${key}:`, error);
+        return fallback;
+    }
+}
+
+function writeJSON(key, value) {
+    try {
+        localStorage.setItem(
+            key,
+            JSON.stringify(value)
+        );
+
+        return true;
+    } catch (error) {
+        console.error(`Gagal menyimpan ${key}:`, error);
+        return false;
+    }
+}
+
+
+// ======================================================
+// APPLICATION STATE
+// ======================================================
+
+let player = {
+    ...DEFAULT_PLAYER,
+    ...readJSON(STORAGE_KEYS.player, {})
+};
+
+let unlockedAchievements = readJSON(
+    STORAGE_KEYS.achievements,
+    []
 );
 
+if (!Array.isArray(unlockedAchievements)) {
+    unlockedAchievements = [];
+}
 
-// ======================================================
-// APPLICATION CONFIGURATION
-// ======================================================
+let missionHistory = readJSON(
+    STORAGE_KEYS.history,
+    []
+);
 
-const APP_CONFIG = Object.freeze({
-
-    name:
-        "SERVER HERO PREMIUM",
-
-    version:
-        "5.0",
-
-    build:
-        "2026.07",
-
-    totalMissions:
-
-        Array.isArray(
-
-            window.missions
-
-        )
-
-            ? window.missions.length
-
-            : 0
-
-});
+if (!Array.isArray(missionHistory)) {
+    missionHistory = [];
+}
 
 
 // ======================================================
 // DOM REFERENCES
 // ======================================================
 
-const DOM = {
-
-    missions:
-
-        document.getElementById(
-
-            "missions"
-
-        ),
-
-    xp:
-
-        document.getElementById(
-
-            "xp"
-
-        ),
-
-    level:
-
-        document.getElementById(
-
-            "level"
-
-        ),
-
-    coins:
-
-        document.getElementById(
-
-            "coins"
-
-        ),
-
-    gems:
-
-        document.getElementById(
-
-            "gems"
-
-        ),
-
-    rank:
-
-        document.getElementById(
-
-            "rank"
-
-        ),
-
-    rankText:
-
-        document.getElementById(
-
-            "rankText"
-
-        ),
-
-    streak:
-
-        document.getElementById(
-
-            "streak"
-
-        ),
-
-    achievementCount:
-
-        document.getElementById(
-
-            "achievementCount"
-
-        ),
-
-    completion:
-
-        document.getElementById(
-
-            "completion"
-
-        ),
-
-    progress:
-
-        document.getElementById(
-
-            "progress"
-
-        ),
-
-    percent:
-
-        document.getElementById(
-
-            "percent"
-
-        ),
-
-    dailyMission:
-
-        document.getElementById(
-
-            "dailyMission"
-
-        ),
-
-    profileName:
-
-        document.querySelector(
-
-            ".profile-content strong"
-
-        ),
-
-    masterPanel:
-
-        document.getElementById(
-
-            "masterPanel"
-
-        )
-
-};
+const DOM = Object.freeze({
+    missions: document.getElementById("missions"),
+    xp: document.getElementById("xp"),
+    level: document.getElementById("level"),
+    rank: document.getElementById("rank"),
+    rankText: document.getElementById("rankText"),
+    streak: document.getElementById("streak"),
+    achievementCount: document.getElementById("achievementCount"),
+    completion: document.getElementById("completion"),
+    progress: document.getElementById("progress"),
+    percent: document.getElementById("percent"),
+    dailyMission: document.getElementById("dailyMission"),
+    masterPanel: document.getElementById("masterPanel"),
+    profileName: document.querySelector(".profile-content strong")
+});
 
 
 // ======================================================
-// BASIC HELPERS
+// GENERAL HELPERS
 // ======================================================
 
-function setText(
-
-    element,
-
-    value
-
-) {
-
+function setText(element, value) {
     if (element) {
-
-        element.textContent =
-
-            String(value);
-
+        element.textContent = String(value);
     }
-
 }
 
+function escapeHTML(value) {
+    const container = document.createElement("div");
 
-function getDailyMissionText() {
+    container.textContent = String(
+        value ?? ""
+    );
 
-    const dailyMessages = [
+    return container.innerHTML;
+}
 
-        "Lengkapkan satu misi server hari ini.",
+function getMissionById(missionId) {
+    return MISSION_LIST.find(
+        mission =>
+            Number(mission.id) ===
+            Number(missionId)
+    ) || null;
+}
 
-        "Jawab satu kuiz misi dengan betul.",
+function missionCompleteKey(missionId) {
+    return `lesson${Number(missionId)}Complete`;
+}
 
-        "Kumpulkan sekurang-kurangnya 250 XP hari ini.",
+function missionRewardKey(missionId) {
+    return `lesson${Number(missionId)}RewardedV4`;
+}
 
-        "Ulang kaji satu misi yang telah selesai.",
+function isMissionCompleted(missionId) {
+    return (
+        localStorage.getItem(
+            missionCompleteKey(missionId)
+        ) === "true"
+    );
+}
 
-        "Buka satu pelajaran Windows Server baharu."
+function isMissionRewarded(missionId) {
+    return (
+        localStorage.getItem(
+            missionRewardKey(missionId)
+        ) === "true"
+    );
+}
 
-    ];
+function isMissionUnlocked(missionId) {
+    const id = Number(missionId);
 
-    const messageIndex =
+    return (
+        id === 1 ||
+        isMissionCompleted(id - 1)
+    );
+}
 
-        new Date().getDate() %
+function getCompletedMissionCount() {
+    return MISSION_LIST.filter(
+        mission =>
+            isMissionCompleted(
+                mission.id
+            )
+    ).length;
+}
 
-        dailyMessages.length;
+function saveApplicationData() {
+    writeJSON(
+        STORAGE_KEYS.player,
+        player
+    );
 
-    return dailyMessages[
+    writeJSON(
+        STORAGE_KEYS.achievements,
+        unlockedAchievements
+    );
 
-        messageIndex
-
-    ];
-
+    writeJSON(
+        STORAGE_KEYS.history,
+        missionHistory
+    );
 }
 
 
 // ======================================================
-// DAILY BONUS
+// PLAYER CALCULATIONS
 // ======================================================
 
-function getTodayKey() {
+function calculatePlayer() {
+    player.completed =
+        getCompletedMissionCount();
 
-    const today =
-
-        new Date();
-
-    const year =
-
-        today.getFullYear();
-
-    const month =
-
-        String(
-
-            today.getMonth() + 1
-
-        ).padStart(
-
-            2,
-
-            "0"
-
+    player.level =
+        Math.max(
+            1,
+            Math.floor(
+                Number(player.xp || 0) /
+                500
+            )
         );
-
-    const day =
-
-        String(
-
-            today.getDate()
-
-        ).padStart(
-
-            2,
-
-            "0"
-
-        );
-
-    return `${year}-${month}-${day}`;
-
-}
-
-
-function claimDailyBonus() {
-
-    const today =
-
-        getTodayKey();
-
-    const previousClaim =
-
-        SERVER_HERO_STORAGE
-
-            .readRaw(
-
-                SERVER_HERO_STORAGE
-
-                    .keys
-
-                    .dailyBonus
-
-            );
 
     if (
-
-        previousClaim === today
-
+        player.completed >=
+        MISSION_LIST.length &&
+        MISSION_LIST.length > 0
     ) {
-
-        return false;
-
+        player.rank =
+            "SERVER HERO MASTER";
+    } else if (player.xp >= 9000) {
+        player.rank =
+            "Master";
+    } else if (player.xp >= 6500) {
+        player.rank =
+            "Elite";
+    } else if (player.xp >= 4000) {
+        player.rank =
+            "Professional";
+    } else if (player.xp >= 2000) {
+        player.rank =
+            "Advanced";
+    } else {
+        player.rank =
+            "Beginner";
     }
-
-    SERVER_HERO_PLAYER.addXP(
-
-        50
-
-    );
-
-    SERVER_HERO_STORAGE.writeRaw(
-
-        SERVER_HERO_STORAGE
-
-            .keys
-
-            .dailyBonus,
-
-        today
-
-    );
-
-    SERVER_HERO_UI.toast(
-
-        "🎁 Bonus Harian: +50 XP",
-
-        "success",
-
-        3500
-
-    );
-
-    return true;
-
 }
 
 
 // ======================================================
-// DASHBOARD UPDATE
+// MISSION REWARD SYNCHRONIZATION
+// ======================================================
+
+function synchronizeMissionRewards() {
+    let changed = false;
+
+    MISSION_LIST.forEach(
+        mission => {
+            if (
+                !isMissionCompleted(
+                    mission.id
+                ) ||
+                isMissionRewarded(
+                    mission.id
+                )
+            ) {
+                return;
+            }
+
+            player.xp +=
+                Number(
+                    mission.xp
+                ) || 0;
+
+            localStorage.setItem(
+                missionRewardKey(
+                    mission.id
+                ),
+                "true"
+            );
+
+            missionHistory.unshift({
+                id: mission.id,
+                title: mission.subtitle,
+                completedAt:
+                    new Date().toISOString()
+            });
+
+            changed = true;
+        }
+    );
+
+    missionHistory =
+        missionHistory.slice(
+            0,
+            50
+        );
+
+    if (changed) {
+        player.streak =
+            Number(player.streak || 1) + 1;
+
+        saveApplicationData();
+    }
+}
+
+
+// ======================================================
+// DASHBOARD
 // ======================================================
 
 function updateDashboard() {
-
-    const player =
-
-        SERVER_HERO_PLAYER
-
-            .getDashboardData();
+    calculatePlayer();
 
     setText(
-
-        DOM.profileName,
-
-        player.name || "AGENT"
-
-    );
-
-    const progressData =
-
-        SERVER_HERO_MISSION_ENGINE
-
-            .getProgress();
-
-    const achievementCount =
-
-        SERVER_HERO_ACHIEVEMENTS
-
-            .getUnlockedCount();
-
-    setText(
-
         DOM.xp,
-
         player.xp
-
     );
 
     setText(
-
         DOM.level,
-
         player.level
-
     );
 
     setText(
-
-        DOM.coins,
-
-        player.coins
-
-    );
-
-    setText(
-
-        DOM.gems,
-
-        player.gems
-
-    );
-
-    setText(
-
         DOM.rank,
-
         player.rank
-
     );
 
     setText(
-
         DOM.rankText,
-
         player.rank
-
     );
 
     setText(
-
         DOM.streak,
-
-        `${player.streak} Hari`
-
+        `${player.streak || 1} Hari`
     );
 
     setText(
-
         DOM.achievementCount,
-
-        achievementCount
-
+        unlockedAchievements.length
     );
 
     setText(
-
         DOM.completion,
-
-        `${progressData.completed} / ${progressData.total}`
-
+        `${player.completed} / ${MISSION_LIST.length}`
     );
 
-    setText(
-
-        DOM.percent,
-
-        `${progressData.percentage}%`
-
-    );
+    const percentage =
+        MISSION_LIST.length > 0
+            ? Math.round(
+                (
+                    player.completed /
+                    MISSION_LIST.length
+                ) * 100
+            )
+            : 0;
 
     if (DOM.progress) {
-
-        SERVER_HERO_UI
-
-            .animateProgress(
-
-                DOM.progress,
-
-                progressData.percentage,
-
-                700
-
-            );
-
+        DOM.progress.value =
+            percentage;
     }
 
+    setText(
+        DOM.percent,
+        `${percentage}%`
+    );
+
     if (DOM.dailyMission) {
-
         DOM.dailyMission.textContent =
+            "Lengkapkan satu misi server hari ini.";
+    }
 
-            getDailyMissionText();
+    const studentName =
+        localStorage.getItem(
+            STORAGE_KEYS.studentName
+        );
 
+    if (DOM.profileName) {
+        DOM.profileName.textContent =
+            studentName || "AGENT";
     }
 
     if (DOM.masterPanel) {
+        const completedAll =
+            MISSION_LIST.length > 0 &&
+            player.completed >=
+                MISSION_LIST.length;
 
         DOM.masterPanel.classList.toggle(
-
             "hidden",
-
-            progressData.completed < progressData.total
-
+            !completedAll
         );
 
+        if (completedAll) {
+            localStorage.setItem(
+                STORAGE_KEYS.masterUnlocked,
+                "true"
+            );
+        }
     }
 
+    saveApplicationData();
 }
 
 
 // ======================================================
-// MISSION CARD RENDERING
+// MISSION CARD ENGINE
 // ======================================================
 
-function createMissionCard(
-
-    mission
-
-) {
-
-    const card =
-
-        document.createElement(
-
-            "article"
-
-        );
-
-    card.className =
-
-        "mission-card";
-
-    card.dataset.missionId =
-
-        String(mission.id);
-
-    if (
-
-        mission.completed
-
-    ) {
-
-        card.classList.add(
-
-            "completed"
-
-        );
-
-    }
-
-    else if (
-
-        !mission.unlocked
-
-    ) {
-
-        card.classList.add(
-
-            "locked"
-
-        );
-
-    }
-
-    const buttonLabel =
-
-        mission.completed
-
-            ? "Selesai"
-
-            : mission.unlocked
-
-                ? "Mulakan Misi"
-
-                : "Terkunci";
-
-    card.innerHTML = `
-
-        <div class="mission-header">
-
-            <div>
-
-                <h2>
-
-                    ${SERVER_HERO_UI.escapeHTML(
-
-                        mission.icon
-
-                    )}
-
-                    ${SERVER_HERO_UI.escapeHTML(
-
-                        mission.title
-
-                    )}
-
-                </h2>
-
-                <h4>
-
-                    ${SERVER_HERO_UI.escapeHTML(
-
-                        mission.subtitle
-
-                    )}
-
-                </h4>
-
-            </div>
-
-            <span class="badge">
-
-                ${Number(
-
-                    mission.xp
-
-                ) || 0} XP
-
-            </span>
-
-        </div>
-
-        <p>
-
-            ${SERVER_HERO_UI.escapeHTML(
-
-                mission.description
-
-            )}
-
-        </p>
-
-        <div class="mission-info">
-
-            <span>
-
-                🎯 ${SERVER_HERO_UI.escapeHTML(
-
-                    mission.difficulty
-
-                )}
-
-            </span>
-
-            <span>
-
-                ⏱ ${SERVER_HERO_UI.escapeHTML(
-
-                    mission.duration
-
-                )}
-
-            </span>
-
-        </div>
-
-        <div class="mission-footer">
-
-            <button
-
-                type="button"
-
-                ${
-
-                    mission.completed ||
-
-                    !mission.unlocked
-
-                        ? "disabled"
-
-                        : ""
-
-                }
-
-            >
-
-                ${buttonLabel}
-
-            </button>
-
-        </div>
-
-    `;
-
-    const button =
-
-        card.querySelector(
-
-            "button"
-
-        );
-
-    if (
-
-        button &&
-
-        mission.unlocked &&
-
-        !mission.completed
-
-    ) {
-
-        button.addEventListener(
-
-            "click",
-
-            () => {
-
-                const result =
-
-                    SERVER_HERO_MISSION_ENGINE
-
-                        .open(
-
-                            mission.id
-
-                        );
-
-                if (
-
-                    !result.success
-
-                ) {
-
-                    SERVER_HERO_UI.toast(
-
-                        "Misi tidak dapat dibuka.",
-
-                        "error"
-
-                    );
-
-                }
-
-            }
-
-        );
-
-    }
-
-    return card;
-
-}
-
-
-function renderMissionCards() {
-
+function createMissionCards() {
     if (!DOM.missions) {
+        console.error(
+            'SERVER HERO: Elemen id="missions" tidak dijumpai.'
+        );
 
         return;
-
     }
 
     DOM.missions.innerHTML = "";
 
-    const missionList =
+    if (MISSION_LIST.length === 0) {
+        DOM.missions.innerHTML = `
+            <article class="mission-card">
+                <h2>Data misi tidak dijumpai</h2>
+                <p>Semak fail missions.js dan susunan script dalam index.html.</p>
+            </article>
+        `;
 
-        SERVER_HERO_MISSION_ENGINE
+        return;
+    }
 
-            .getAll();
-
-    missionList.forEach(
-
+    MISSION_LIST.forEach(
         mission => {
+            const completed =
+                isMissionCompleted(
+                    mission.id
+                );
+
+            const unlocked =
+                isMissionUnlocked(
+                    mission.id
+                );
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+            card.className =
+                "mission-card";
+
+            card.dataset.missionId =
+                String(
+                    mission.id
+                );
+
+            if (completed) {
+                card.classList.add(
+                    "completed"
+                );
+            } else if (!unlocked) {
+                card.classList.add(
+                    "locked"
+                );
+            }
+
+            const buttonLabel =
+                completed
+                    ? "Selesai"
+                    : unlocked
+                        ? "Mulakan Misi"
+                        : "Terkunci";
+
+            const statusIcon =
+                completed
+                    ? "✅"
+                    : unlocked
+                        ? "🔓"
+                        : "🔒";
+
+            card.innerHTML = `
+                <div class="mission-header">
+                    <div>
+                        <h2>
+                            ${escapeHTML(mission.icon)}
+                            ${escapeHTML(mission.title)}
+                        </h2>
+
+                        <h4>
+                            ${escapeHTML(mission.subtitle)}
+                        </h4>
+                    </div>
+
+                    <span class="badge">
+                        ${Number(mission.xp) || 0} XP
+                    </span>
+                </div>
+
+                <p>
+                    ${escapeHTML(mission.description)}
+                </p>
+
+                <div class="mission-info">
+                    <span>
+                        🎯 ${escapeHTML(mission.difficulty)}
+                    </span>
+
+                    <span>
+                        ⏱ ${escapeHTML(mission.duration)}
+                    </span>
+                </div>
+
+                <div class="mission-footer">
+                    <span class="mission-status">
+                        ${statusIcon}
+                    </span>
+
+                    <button
+                        type="button"
+                        ${
+                            completed || !unlocked
+                                ? "disabled"
+                                : ""
+                        }
+                    >
+                        ${buttonLabel}
+                    </button>
+                </div>
+            `;
+
+            const button =
+                card.querySelector(
+                    "button"
+                );
+
+            if (
+                button &&
+                unlocked &&
+                !completed
+            ) {
+                button.addEventListener(
+                    "click",
+                    () =>
+                        openMission(
+                            mission.id
+                        )
+                );
+            }
 
             DOM.missions.appendChild(
-
-                createMissionCard(
-
-                    mission
-
-                )
-
+                card
             );
-
         }
-
     );
-
 }
 
 
 // ======================================================
-// EXPORT SAVE
+// MISSION NAVIGATION
+// ======================================================
+
+function openMission(missionId) {
+    const mission =
+        getMissionById(
+            missionId
+        );
+
+    if (!mission) {
+        showToast(
+            "Misi tidak dijumpai.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (
+        !isMissionUnlocked(
+            missionId
+        )
+    ) {
+        showToast(
+            "Selesaikan misi sebelumnya dahulu.",
+            "error"
+        );
+
+        return;
+    }
+
+    window.location.href =
+        mission.page;
+}
+
+
+// ======================================================
+// ACHIEVEMENTS
+// ======================================================
+
+function checkAchievements() {
+    calculatePlayer();
+
+    let changed = false;
+
+    ACHIEVEMENTS.forEach(
+        achievement => {
+            if (
+                player.completed >=
+                    achievement.target &&
+                !unlockedAchievements.includes(
+                    achievement.id
+                )
+            ) {
+                unlockedAchievements.push(
+                    achievement.id
+                );
+
+                player.xp +=
+                    achievement.rewardXP;
+
+                changed = true;
+
+                showToast(
+                    `🏆 ${achievement.title} dibuka! +${achievement.rewardXP} XP`,
+                    "success"
+                );
+            }
+        }
+    );
+
+    if (changed) {
+        calculatePlayer();
+        saveApplicationData();
+    }
+
+    updateAchievementCards();
+}
+
+function updateAchievementCards() {
+    document
+        .querySelectorAll(
+            ".achievement-card"
+        )
+        .forEach(
+            card => {
+                const achievementId =
+                    card.dataset
+                        .achievementId;
+
+                if (!achievementId) {
+                    return;
+                }
+
+                card.classList.toggle(
+                    "unlocked",
+                    unlockedAchievements.includes(
+                        achievementId
+                    )
+                );
+            }
+        );
+}
+
+
+// ======================================================
+// STUDENT LOGIN
+// ======================================================
+
+function showStudentLogin() {
+    const savedName =
+        localStorage.getItem(
+            STORAGE_KEYS.studentName
+        );
+
+    if (savedName) {
+        if (DOM.profileName) {
+            DOM.profileName.textContent =
+                savedName;
+        }
+
+        return;
+    }
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+    overlay.className =
+        "student-login-overlay";
+
+    overlay.innerHTML = `
+        <form class="student-login-card">
+            <div class="student-login-icon">
+                👩‍💻
+            </div>
+
+            <h2>
+                Selamat Datang ke SERVER HERO
+            </h2>
+
+            <p>
+                Masukkan nama pelajar sebelum memulakan pembelajaran.
+            </p>
+
+            <label for="studentNameInput">
+                Nama Pelajar
+            </label>
+
+            <input
+                id="studentNameInput"
+                type="text"
+                maxlength="60"
+                autocomplete="name"
+                placeholder="Contoh: Nurul Farhana"
+                required
+            >
+
+            <button type="submit">
+                Mula Pembelajaran
+            </button>
+
+            <div
+                class="student-login-error"
+                aria-live="polite"
+            ></div>
+        </form>
+    `;
+
+    document.body.appendChild(
+        overlay
+    );
+
+    const form =
+        overlay.querySelector(
+            "form"
+        );
+
+    const input =
+        overlay.querySelector(
+            "input"
+        );
+
+    const errorBox =
+        overlay.querySelector(
+            ".student-login-error"
+        );
+
+    form.addEventListener(
+        "submit",
+        event => {
+            event.preventDefault();
+
+            const name =
+                input.value.trim();
+
+            if (name.length < 2) {
+                errorBox.textContent =
+                    "Sila masukkan nama pelajar yang sah.";
+
+                return;
+            }
+
+            localStorage.setItem(
+                STORAGE_KEYS.studentName,
+                name
+            );
+
+            player.name =
+                name;
+
+            saveApplicationData();
+
+            if (DOM.profileName) {
+                DOM.profileName.textContent =
+                    name;
+            }
+
+            overlay.remove();
+        }
+    );
+
+    setTimeout(
+        () =>
+            input.focus(),
+        100
+    );
+}
+
+
+// ======================================================
+// EXPORT / IMPORT
 // ======================================================
 
 function exportSave() {
-
-    const exportPackage = {
-
-        version:
-            APP_CONFIG.version,
-
-        app:
-            APP_CONFIG.name,
-
+    const payload = {
+        version: "5.2",
         exportedAt:
             new Date().toISOString(),
-
-        storage:
-            SERVER_HERO_STORAGE
-
-                .exportAll(),
-
-        player:
-            SERVER_HERO_PLAYER
-
-                .exportData(),
-
+        studentName:
+            localStorage.getItem(
+                STORAGE_KEYS.studentName
+            ) || "",
+        player,
         achievements:
-            SERVER_HERO_ACHIEVEMENTS
-
-                .exportData()
-
+            unlockedAchievements,
+        history:
+            missionHistory,
+        missions:
+            MISSION_LIST.map(
+                mission => ({
+                    id:
+                        mission.id,
+                    completed:
+                        isMissionCompleted(
+                            mission.id
+                        ),
+                    rewarded:
+                        isMissionRewarded(
+                            mission.id
+                        )
+                })
+            )
     };
 
-    SERVER_HERO_STORAGE.write(
-
-        SERVER_HERO_STORAGE
-
-            .keys
-
-            .exportSave,
-
-        exportPackage
-
-    );
-
-    const exportText =
-
-        JSON.stringify(
-
-            exportPackage,
-
-            null,
-
-            2
-
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    payload,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
         );
 
-    if (
+    const url =
+        URL.createObjectURL(
+            blob
+        );
 
-        navigator.clipboard &&
+    const link =
+        document.createElement(
+            "a"
+        );
 
-        window.isSecureContext
+    link.href =
+        url;
 
-    ) {
+    link.download =
+        "server-hero-save.json";
 
-        navigator.clipboard
-
-            .writeText(
-
-                exportText
-
-            )
-
-            .then(
-
-                () => {
-
-                    SERVER_HERO_UI.toast(
-
-                        "Save disalin ke clipboard.",
-
-                        "success"
-
-                    );
-
-                }
-
-            )
-
-            .catch(
-
-                () => {
-
-                    SERVER_HERO_UI.toast(
-
-                        "Save disimpan dalam browser.",
-
-                        "info"
-
-                    );
-
-                }
-
-            );
-
-        return;
-
-    }
-
-    SERVER_HERO_UI.toast(
-
-        "Save disimpan dalam browser.",
-
-        "success"
-
+    document.body.appendChild(
+        link
     );
 
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(
+        url
+    );
+
+    showToast(
+        "Simpanan berjaya dieksport.",
+        "success"
+    );
 }
-
-
-// ======================================================
-// IMPORT SAVE
-// ======================================================
 
 function importSave() {
-
-    const savedPackage =
-
-        SERVER_HERO_STORAGE
-
-            .readObject(
-
-                SERVER_HERO_STORAGE
-
-                    .keys
-
-                    .exportSave,
-
-                {}
-
-            );
-
-    if (
-
-        !savedPackage ||
-
-        !savedPackage.player
-
-    ) {
-
-        SERVER_HERO_UI.toast(
-
-            "Tiada exported save dijumpai.",
-
-            "error"
-
+    const input =
+        document.createElement(
+            "input"
         );
 
-        return false;
+    input.type =
+        "file";
 
-    }
+    input.accept =
+        ".json,application/json";
 
-    if (
+    input.addEventListener(
+        "change",
+        async () => {
+            const file =
+                input.files?.[0];
 
-        savedPackage.storage
+            if (!file) {
+                return;
+            }
 
-    ) {
+            try {
+                const data =
+                    JSON.parse(
+                        await file.text()
+                    );
 
-        SERVER_HERO_STORAGE
+                player = {
+                    ...DEFAULT_PLAYER,
+                    ...(data.player || {})
+                };
 
-            .importAll(
+                unlockedAchievements =
+                    Array.isArray(
+                        data.achievements
+                    )
+                        ? data.achievements
+                        : [];
 
-                savedPackage.storage
+                missionHistory =
+                    Array.isArray(
+                        data.history
+                    )
+                        ? data.history
+                        : [];
 
-            );
+                if (data.studentName) {
+                    localStorage.setItem(
+                        STORAGE_KEYS.studentName,
+                        String(data.studentName)
+                    );
+                }
 
-    }
+                if (
+                    Array.isArray(
+                        data.missions
+                    )
+                ) {
+                    data.missions.forEach(
+                        savedMission => {
+                            const id =
+                                Number(
+                                    savedMission.id
+                                );
 
-    SERVER_HERO_PLAYER
+                            if (
+                                !Number.isInteger(id) ||
+                                id < 1 ||
+                                id > MISSION_LIST.length
+                            ) {
+                                return;
+                            }
 
-        .importData(
+                            localStorage.setItem(
+                                missionCompleteKey(id),
+                                savedMission.completed
+                                    ? "true"
+                                    : "false"
+                            );
 
-            savedPackage.player
+                            localStorage.setItem(
+                                missionRewardKey(id),
+                                savedMission.rewarded
+                                    ? "true"
+                                    : "false"
+                            );
+                        }
+                    );
+                }
 
-        );
+                saveApplicationData();
 
-    if (
+                window.location.reload();
+            } catch (error) {
+                console.error(
+                    error
+                );
 
-        savedPackage.achievements
-
-    ) {
-
-        SERVER_HERO_ACHIEVEMENTS
-
-            .importData(
-
-                savedPackage.achievements
-
-            );
-
-    }
-
-    refreshApplication();
-
-    SERVER_HERO_UI.toast(
-
-        "Save berjaya dipulihkan.",
-
-        "success"
-
+                window.alert(
+                    "Fail simpanan tidak sah."
+                );
+            }
+        }
     );
 
-    return true;
-
+    input.click();
 }
 
 
 // ======================================================
-// RESET PROGRESS
+// RESET
 // ======================================================
 
 function resetProgress() {
+    const confirmed =
+        window.confirm(
+            "Padam semua kemajuan, XP dan nama pelajar?"
+        );
 
-    SERVER_HERO_UI.confirm(
+    if (!confirmed) {
+        return;
+    }
 
-        "Padam semua kemajuan SERVER HERO?",
+    MISSION_LIST.forEach(
+        mission => {
+            localStorage.removeItem(
+                missionCompleteKey(
+                    mission.id
+                )
+            );
 
-        () => {
-
-            SERVER_HERO_STORAGE
-
-                .clearAll();
-
-            SERVER_HERO_PLAYER
-
-                .reset();
-
-            SERVER_HERO_ACHIEVEMENTS
-
-                .reset();
-
-            SERVER_HERO_MISSION_ENGINE
-
-                .reset();
-
-            window.location.reload();
-
-        },
-
-        "Reset Progress"
-
+            localStorage.removeItem(
+                missionRewardKey(
+                    mission.id
+                )
+            );
+        }
     );
 
-}
-
-
-// ======================================================
-// REPORT AND CERTIFICATE
-// ======================================================
-
-function openPlayerReport() {
-
-    const opened =
-
-        SERVER_HERO_REPORT
-
-            .open();
-
-    if (!opened) {
-
-        SERVER_HERO_UI.toast(
-
-            "Report tidak dapat dibuka.",
-
-            "error"
-
-        );
-
-    }
-
-}
-
-
-function openCertificate() {
-
-    const opened =
-
-        SERVER_HERO_CERTIFICATE
-
-            .open();
-
-    if (!opened) {
-
-        SERVER_HERO_UI.toast(
-
-            "Complete all missions before generating the certificate.",
-
-            "error"
-
-        );
-
-    }
-
-}
-
-
-// ======================================================
-// SHOP REMOVAL SUPPORT
-// ======================================================
-
-function buyItem() {
-
-    SERVER_HERO_UI.toast(
-
-        "Premium Shop telah dinyahaktifkan.",
-
-        "info"
-
+    Object.values(
+        STORAGE_KEYS
+    ).forEach(
+        key =>
+            localStorage.removeItem(
+                key
+            )
     );
 
+    window.location.reload();
 }
 
 
 // ======================================================
-// APPLICATION REFRESH
+// UI NOTIFICATION
 // ======================================================
 
-function refreshApplication() {
+function showToast(
+    message,
+    type = "info"
+) {
+    const existing =
+        document.querySelector(
+            ".toast"
+        );
 
-    SERVER_HERO_PLAYER
+    if (existing) {
+        existing.remove();
+    }
 
-        .refresh();
+    const toast =
+        document.createElement(
+            "div"
+        );
 
-    SERVER_HERO_MISSION_ENGINE
+    toast.className =
+        `toast ${type}`;
 
-        .synchronizeRewards();
+    toast.textContent =
+        message;
 
-    SERVER_HERO_ACHIEVEMENTS
+    document.body.appendChild(
+        toast
+    );
 
-        .check();
+    requestAnimationFrame(
+        () =>
+            toast.classList.add(
+                "show"
+            )
+    );
 
-    updateDashboard();
+    setTimeout(
+        () =>
+            toast.classList.remove(
+                "show"
+            ),
+        2600
+    );
 
-    renderMissionCards();
-
+    setTimeout(
+        () =>
+            toast.remove(),
+        3200
+    );
 }
 
 
 // ======================================================
-// EVENT LISTENERS
+// GLOBAL API
 // ======================================================
 
-window.addEventListener(
-
-    "serverhero:mission-completed",
-
-    () => {
-
-        window.setTimeout(
-
-            () => {
-
-                refreshApplication();
-
-            },
-
-            100
-
-        );
-
-    }
-
-);
-
-
-window.addEventListener(
-
-    "serverhero:achievement-unlocked",
-
-    () => {
-
-        window.setTimeout(
-
-            () => {
-
-                updateDashboard();
-
-            },
-
-            100
-
-        );
-
-    }
-
-);
-
-
-window.addEventListener(
-
-    "serverhero:missions-reset",
-
-    () => {
-
-        refreshApplication();
-
-    }
-
-);
-
-
-// ======================================================
-// GLOBAL FUNCTIONS
-// ======================================================
-
-window.buyItem =
-
-    buyItem;
+window.openMission =
+    openMission;
 
 window.exportSave =
-
     exportSave;
 
 window.importSave =
-
     importSave;
 
 window.resetProgress =
-
     resetProgress;
 
-window.openPlayerReport =
-
-    openPlayerReport;
-
-window.openCertificate =
-
-    openCertificate;
-
-
-// ======================================================\n// STUDENT LOGIN\n// ======================================================\n\nfunction injectStudentLoginStyles() {\n\n    if (document.getElementById("studentLoginStyles")) {\n\n        return;\n\n    }\n\n    const style = document.createElement("style");\n\n    style.id = "studentLoginStyles";\n\n    style.textContent = `\n        .student-login-overlay {\n            position: fixed;\n            inset: 0;\n            z-index: 20000;\n            display: grid;\n            place-items: center;\n            padding: 20px;\n            background: rgba(2, 8, 23, 0.92);\n            backdrop-filter: blur(12px);\n        }\n        .student-login-card {\n            width: min(100%, 460px);\n            padding: 30px;\n            border: 1px solid rgba(255,255,255,.12);\n            border-radius: 24px;\n            background: linear-gradient(145deg, #14243d, #091322);\n            color: #f8fafc;\n            text-align: center;\n            box-shadow: 0 30px 80px rgba(0,0,0,.55);\n        }\n        .student-login-icon {\n            font-size: 3.6rem;\n            margin-bottom: 12px;\n        }\n        .student-login-card h2 {\n            margin-bottom: 8px;\n            font-size: 1.75rem;\n        }\n        .student-login-card p {\n            color: #b8c7d9;\n            line-height: 1.65;\n            margin-bottom: 20px;\n        }\n        .student-login-card input {\n            width: 100%;\n            padding: 15px 16px;\n            border: 1px solid rgba(255,255,255,.12);\n            border-radius: 14px;\n            background: #1a2f4b;\n            color: #fff;\n            outline: none;\n        }\n        .student-login-card input:focus {\n            border-color: #22b7ff;\n            box-shadow: 0 0 0 4px rgba(34,183,255,.12);\n        }\n        .student-login-card button {\n            width: 100%;\n            margin-top: 14px;\n            padding: 14px 18px;\n            border: 0;\n            border-radius: 14px;\n            background: linear-gradient(135deg, #1686ff, #22b7ff);\n            color: #fff;\n            font-weight: 800;\n        }\n        .student-login-error {\n            min-height: 24px;\n            margin-top: 10px;\n            color: #ffc7c7;\n            font-size: .88rem;\n        }\n    `;\n\n    document.head.appendChild(style);\n\n}\n\n\nfunction ensureStudentLogin(onReady) {\n\n    const player = SERVER_HERO_PLAYER.get();\n\n    if (\n\n        player.name &&\n\n        player.name.trim() &&\n\n        player.name.trim().toUpperCase() !== "AGENT"\n\n    ) {\n\n        onReady();\n\n        return;\n\n    }\n\n    injectStudentLoginStyles();\n\n    const overlay = document.createElement("div");\n\n    overlay.className = "student-login-overlay";\n\n    overlay.innerHTML = `\n        <form class="student-login-card" id="studentLoginForm">\n            <div class="student-login-icon">👩‍💻</div>\n            <h2>Selamat Datang, Pelajar</h2>\n            <p>Masukkan nama penuh sebelum memulakan SERVER HERO PREMIUM.</p>\n            <input\n                id="studentNameInput"\n                type="text"\n                maxlength="30"\n                autocomplete="name"\n                placeholder="Contoh: Nurul Farhana"\n                required\n            >\n            <button type="submit">MULA MISI</button>\n            <div class="student-login-error" id="studentLoginError"></div>\n        </form>\n    `;\n\n    document.body.appendChild(overlay);\n\n    const form = overlay.querySelector("#studentLoginForm");\n    const input = overlay.querySelector("#studentNameInput");\n    const error = overlay.querySelector("#studentLoginError");\n\n    input.focus();\n\n    form.addEventListener("submit", event => {\n\n        event.preventDefault();\n\n        const name = input.value.trim();\n\n        if (name.length < 2) {\n\n            error.textContent = "Sila masukkan nama pelajar yang sah.";\n\n            return;\n\n        }\n\n        if (!SERVER_HERO_PLAYER.setName(name)) {\n\n            error.textContent = "Nama tidak dapat disimpan. Cuba semula.";\n\n            return;\n\n        }\n\n        overlay.remove();\n\n        onReady();\n\n    });\n\n}\n\n\n// ======================================================
-// PUBLIC APPLICATION API
-// ======================================================
-
 window.SERVER_HERO = {
+    version: "5.2",
 
-    name:
-        APP_CONFIG.name,
+    getPlayer() {
+        return {
+            ...player
+        };
+    },
 
-    version:
-        APP_CONFIG.version,
-
-    build:
-        APP_CONFIG.build,
-
-    refresh:
-        refreshApplication,
-
-    updateDashboard:
-        updateDashboard,
-
-    renderMissions:
-        renderMissionCards,
-
-    exportSave:
-        exportSave,
-
-    importSave:
-        importSave,
-
-    reset:
-        resetProgress,
-
-    openReport:
-        openPlayerReport,
-
-    openCertificate:
-        openCertificate
-
+    refresh() {
+        synchronizeMissionRewards();
+        checkAchievements();
+        updateDashboard();
+        createMissionCards();
+    }
 };
 
 
@@ -1286,86 +1164,16 @@ window.SERVER_HERO = {
 // INITIALIZATION
 // ======================================================
 
-function startServerHeroApplication() {
-
-    SERVER_HERO_UI.showLoading(
-
-        "Memuatkan SERVER HERO..."
-
-    );
-
-    claimDailyBonus();
-
-    refreshApplication();
-
-    window.setTimeout(
-
-        () => {
-
-            SERVER_HERO_UI.hideLoading();
-
-            const player = SERVER_HERO_PLAYER.get();
-
-            SERVER_HERO_UI.toast(
-
-                `Selamat kembali, ${player.name || "Agent"}!`,
-
-                "info",
-
-                2500
-
-            );
-
-        },
-
-        500
-
-    );
-
-    console.log(
-
-        "======================================"
-
-    );
-
-    console.log(
-
-        `${APP_CONFIG.name} V${APP_CONFIG.version}`
-
-    );
-
-    console.log(
-
-        "FINAL APPLICATION CONTROLLER READY"
-
-    );
-
-    console.log(
-
-        "Total Missions:",
-
-        APP_CONFIG.totalMissions
-
-    );
-
-    console.log(
-
-        "======================================"
-
-    );
-
-}
-
-
 function initializeServerHero() {
+    synchronizeMissionRewards();
+    checkAchievements();
+    updateDashboard();
+    createMissionCards();
+    showStudentLogin();
 
-    ensureStudentLogin(
-
-        startServerHeroApplication
-
+    console.log(
+        `SERVER HERO V5.2 READY - ${MISSION_LIST.length} MISI`
     );
-
 }
-
 
 initializeServerHero();
