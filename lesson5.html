@@ -1,1 +1,490 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mission 05 - Configure DHCP Server</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="lesson.css"></head><body data-lesson-id="5"><main class="container"><header class="hero"><div><h1>MISSION 05: Configure DHCP Server</h1><p>Install DHCP and create a scope for automatic client addressing.</p></div><div class="reward">⭐ 500 XP</div></header><section class="card"><h2>🎯 Mission Objectives</h2><ul><li>Install the DHCP role.</li><li>Authorize the server.</li><li>Create an IPv4 scope.</li><li>Activate the scope.</li></ul></section><section class="card"><h2>📊 Mission Progress</h2><progress id="missionProgress" value="0" max="100"></progress><p id="progressText">0%</p></section><section class="card"><h2>📘 Learning Notes</h2><p>Install DHCP and create a scope for automatic client addressing.</p></section><section class="card"><h2>🧪 Mini Lab</h2><ol><li>Install the DHCP role.</li><li>Authorize the server.</li><li>Create an IPv4 scope.</li><li>Activate the scope.</li></ol></section><section class="card"><h2>📝 Mission Quiz</h2><p>What does DHCP provide automatically?</p><div class="quiz"><button type="button" data-correct="false">User passwords</button><button type="button" data-correct="true">IP configuration</button><button type="button" data-correct="false">Printer ink</button><button type="button" data-correct="false">Windows license</button></div><div id="result" class="result"></div></section><section class="actions"><button class="secondary" onclick="location.href='index.html'">🏠 Dashboard</button><button id="completeBtn" disabled>Complete Mission</button></section></main><script src="lesson.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Misi 05 SERVER HERO PREMIUM - Organizational Unit dan Akaun Pengguna">
+    <title>Misi 05 - OU dan Akaun Pengguna</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="lesson5.css">
+</head>
+
+<body>
+    <div class="background-grid"></div>
+    <div class="background-glow"></div>
+
+    <main class="lesson-app">
+
+        <nav class="top-nav">
+            <button type="button" class="nav-button" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </button>
+
+            <div class="breadcrumb">
+                <span>Dashboard</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Misi 05</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <strong>OU dan Akaun Pengguna</strong>
+            </div>
+        </nav>
+
+        <header class="mission-hero">
+            <div class="hero-icon">👥</div>
+
+            <div class="hero-content">
+                <span class="mission-label">MISI 05</span>
+                <h1>Cipta Organizational Unit dan Akaun Pengguna</h1>
+                <p>
+                    Pelajari cara membina struktur Organizational Unit,
+                    mencipta akaun pengguna dan mengurus objek Active Directory
+                    secara teratur dalam domain <strong>serverhero.local</strong>.
+                </p>
+
+                <div class="hero-tags">
+                    <span><i class="fa-solid fa-star"></i> 500 XP</span>
+                    <span><i class="fa-solid fa-signal"></i> Tahap Sederhana</span>
+                    <span><i class="fa-solid fa-clock"></i> 35 Minit</span>
+                </div>
+            </div>
+
+            <div class="player-mini-card">
+                <span>XP Semasa</span>
+                <strong id="playerXP">500</strong>
+                <small id="playerRank">Beginner</small>
+            </div>
+        </header>
+
+        <section class="content-card progress-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Kemajuan</span>
+                    <h2>Kemajuan Pembelajaran</h2>
+                </div>
+
+                <strong id="lessonProgressText">0%</strong>
+            </div>
+
+            <progress id="lessonProgress" value="0" max="100"></progress>
+
+            <p>
+                Lengkapkan simulasi penciptaan OU dan pengguna,
+                aktiviti padanan serta lulus kuiz dengan markah sekurang-kurangnya 80%.
+            </p>
+        </section>
+
+        <section class="content-card story-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Cerita Misi</span>
+                    <h2>Taklimat Agent</h2>
+                </div>
+
+                <i class="fa-solid fa-book-open section-icon"></i>
+            </div>
+
+            <p>
+                Domain <strong>serverhero.local</strong> telah berfungsi.
+                Organisasi kini mahu akaun pekerja disusun mengikut jabatan supaya
+                pengurusan pengguna dan polisi keselamatan menjadi lebih kemas.
+            </p>
+
+            <p>
+                Tugas anda ialah mencipta OU bernama <strong>IT Department</strong>,
+                mencipta pengguna bernama <strong>Ali</strong> dengan username
+                <strong>ali</strong>, menetapkan kata laluan
+                <strong>P@ssw0rd123</strong> dan mengaktifkan pilihan
+                <strong>User must change password at next logon</strong>.
+            </p>
+        </section>
+
+        <section class="content-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Objektif</span>
+                    <h2>Objektif Pembelajaran</h2>
+                </div>
+
+                <i class="fa-solid fa-bullseye section-icon"></i>
+            </div>
+
+            <div class="objective-grid">
+                <article><span>01</span><p>Menjelaskan fungsi Organizational Unit.</p></article>
+                <article><span>02</span><p>Mencipta OU dalam Active Directory.</p></article>
+                <article><span>03</span><p>Mencipta akaun pengguna domain.</p></article>
+                <article><span>04</span><p>Menetapkan kata laluan dan pilihan log masuk.</p></article>
+                <article><span>05</span><p>Mengurus status akaun pengguna.</p></article>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Nota Ringkas</span>
+                    <h2>Objek Penting dalam Active Directory</h2>
+                </div>
+
+                <i class="fa-solid fa-sitemap section-icon"></i>
+            </div>
+
+            <div class="note-grid">
+                <article>
+                    <i class="fa-solid fa-folder-tree"></i>
+                    <h3>Organizational Unit</h3>
+                    <p>Bekas logik untuk menyusun pengguna, komputer dan kumpulan mengikut jabatan.</p>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-user"></i>
+                    <h3>User Object</h3>
+                    <p>Akaun yang membolehkan seseorang log masuk ke domain.</p>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-users"></i>
+                    <h3>Group Object</h3>
+                    <p>Digunakan untuk mengurus kebenaran beberapa pengguna secara serentak.</p>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-computer"></i>
+                    <h3>Computer Object</h3>
+                    <p>Mewakili komputer yang menjadi ahli domain.</p>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-key"></i>
+                    <h3>Password Policy</h3>
+                    <p>Menentukan panjang, kerumitan dan tempoh kata laluan.</p>
+                </article>
+
+                <article>
+                    <i class="fa-solid fa-user-shield"></i>
+                    <h3>Account Status</h3>
+                    <p>Akaun boleh diaktifkan, dinyahaktifkan, dikunci atau dipadam.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Prosedur</span>
+                    <h2>Langkah Mencipta OU dan Pengguna</h2>
+                </div>
+
+                <i class="fa-solid fa-list-check section-icon"></i>
+            </div>
+
+            <div class="steps-list">
+                <article class="step-item">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h3>Buka Active Directory Users and Computers</h3>
+                        <p>Dalam Server Manager, pilih Tools dan buka konsol ADUC.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h3>Cipta Organizational Unit</h3>
+                        <p>Klik kanan domain, pilih New, Organizational Unit dan masukkan IT Department.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h3>Cipta Pengguna Baharu</h3>
+                        <p>Klik kanan OU, pilih New dan kemudian User.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h3>Masukkan Maklumat Pengguna</h3>
+                        <p>Masukkan nama Ali dan logon name ali.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h3>Tetapkan Kata Laluan</h3>
+                        <p>Gunakan kata laluan kukuh seperti P@ssw0rd123.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">6</div>
+                    <div>
+                        <h3>Paksa Tukar Kata Laluan</h3>
+                        <p>Tandakan User must change password at next logon.</p>
+                    </div>
+                </article>
+
+                <article class="step-item">
+                    <div class="step-number">7</div>
+                    <div>
+                        <h3>Sahkan Akaun</h3>
+                        <p>Pastikan pengguna Ali berada dalam OU IT Department dan akaun berstatus Enabled.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="tip-card">
+            <div class="tip-icon">💡</div>
+
+            <div>
+                <h2>Tip Penting</h2>
+                <p>
+                    Gunakan OU untuk memudahkan pelaksanaan Group Policy,
+                    delegasi tugas pentadbiran dan pengurusan objek domain.
+                </p>
+            </div>
+        </section>
+
+        <section class="content-card simulation-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Simulasi</span>
+                    <h2>Cipta OU dan Pengguna Domain</h2>
+                </div>
+
+                <i class="fa-solid fa-user-plus section-icon"></i>
+            </div>
+
+            <p class="section-description">
+                Lengkapkan semua tetapan dengan nilai yang betul.
+            </p>
+
+            <div class="simulation-grid">
+                <label>
+                    <span>Nama OU</span>
+                    <input id="ouNameInput" type="text" placeholder="IT Department" autocomplete="off">
+                </label>
+
+                <label>
+                    <span>Nama Pengguna</span>
+                    <input id="fullNameInput" type="text" placeholder="Ali" autocomplete="off">
+                </label>
+
+                <label>
+                    <span>Username</span>
+                    <input id="usernameInput" type="text" placeholder="ali" autocomplete="off">
+                </label>
+
+                <label>
+                    <span>Kata Laluan</span>
+                    <input id="passwordInput" type="password" placeholder="P@ssw0rd123" autocomplete="new-password">
+                </label>
+
+                <label class="checkbox-label">
+                    <input id="changePasswordCheckbox" type="checkbox">
+                    <span>User must change password at next logon</span>
+                </label>
+
+                <label>
+                    <span>Status Akaun</span>
+                    <select id="accountStatusSelect">
+                        <option value="">Pilih status</option>
+                        <option value="enabled">Enabled</option>
+                        <option value="disabled">Disabled</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="simulation-actions">
+                <button type="button" id="testUserBtn" class="primary-button">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Uji Konfigurasi
+                </button>
+
+                <button type="button" id="resetUserBtn" class="secondary-button">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset Simulasi
+                </button>
+            </div>
+
+            <div id="userResult" class="feedback-box">
+                Lengkapkan semua maklumat pengguna.
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Aktiviti</span>
+                    <h2>Padankan Objek dengan Fungsinya</h2>
+                </div>
+
+                <i class="fa-solid fa-puzzle-piece section-icon"></i>
+            </div>
+
+            <p class="section-description">
+                Pilih fungsi yang betul bagi setiap objek Active Directory.
+            </p>
+
+            <div id="matchingActivity" class="matching-activity">
+                <article>
+                    <h3>OU</h3>
+                    <select data-answer="organize-objects">
+                        <option value="">Pilih fungsi</option>
+                        <option value="organize-objects">Mengumpulkan dan menyusun objek</option>
+                        <option value="user-login">Akaun untuk log masuk</option>
+                        <option value="permissions">Mengurus kebenaran</option>
+                        <option value="domain-device">Mewakili komputer domain</option>
+                    </select>
+                </article>
+
+                <article>
+                    <h3>User</h3>
+                    <select data-answer="user-login">
+                        <option value="">Pilih fungsi</option>
+                        <option value="organize-objects">Mengumpulkan dan menyusun objek</option>
+                        <option value="user-login">Akaun untuk log masuk</option>
+                        <option value="permissions">Mengurus kebenaran</option>
+                        <option value="domain-device">Mewakili komputer domain</option>
+                    </select>
+                </article>
+
+                <article>
+                    <h3>Group</h3>
+                    <select data-answer="permissions">
+                        <option value="">Pilih fungsi</option>
+                        <option value="organize-objects">Mengumpulkan dan menyusun objek</option>
+                        <option value="user-login">Akaun untuk log masuk</option>
+                        <option value="permissions">Mengurus kebenaran</option>
+                        <option value="domain-device">Mewakili komputer domain</option>
+                    </select>
+                </article>
+
+                <article>
+                    <h3>Computer</h3>
+                    <select data-answer="domain-device">
+                        <option value="">Pilih fungsi</option>
+                        <option value="organize-objects">Mengumpulkan dan menyusun objek</option>
+                        <option value="user-login">Akaun untuk log masuk</option>
+                        <option value="permissions">Mengurus kebenaran</option>
+                        <option value="domain-device">Mewakili komputer domain</option>
+                    </select>
+                </article>
+            </div>
+
+            <button type="button" id="checkMatchingBtn" class="primary-button">
+                Semak Padanan
+            </button>
+
+            <div id="matchingResult" class="feedback-box">
+                Lengkapkan semua padanan.
+            </div>
+        </section>
+
+        <section class="content-card quiz-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Penilaian</span>
+                    <h2>Kuiz Misi 05</h2>
+                </div>
+
+                <i class="fa-solid fa-circle-question section-icon"></i>
+            </div>
+
+            <div class="quiz-info">
+                <p>
+                    Jawab semua 10 soalan. Markah lulus ialah <strong>80%</strong>.
+                </p>
+
+                <div>
+                    <span>Soalan</span>
+                    <strong id="questionCounter">1 / 10</strong>
+                </div>
+            </div>
+
+            <div id="quizContainer" class="quiz-container">
+                <!-- Dijana oleh lesson5.js -->
+            </div>
+
+            <div id="quizFeedback" class="feedback-box">
+                Pilih satu jawapan.
+            </div>
+
+            <div class="quiz-actions">
+                <button type="button" id="previousQuestionBtn" class="secondary-button">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Sebelumnya
+                </button>
+
+                <button type="button" id="nextQuestionBtn" class="primary-button">
+                    Seterusnya
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="resultSection" class="content-card result-section hidden">
+            <div class="result-icon">🏆</div>
+
+            <h2 id="resultTitle">Keputusan Kuiz</h2>
+
+            <p id="resultMessage">
+                Keputusan anda akan dipaparkan di sini.
+            </p>
+
+            <div class="score-display">
+                <span>Markah</span>
+                <strong id="finalScore">0%</strong>
+            </div>
+
+            <button type="button" id="retryQuizBtn" class="secondary-button">
+                Ulang Kuiz
+            </button>
+        </section>
+
+        <section class="content-card completion-card">
+            <div class="completion-icon">🎖️</div>
+
+            <h2>Penamatan Misi</h2>
+
+            <p>
+                Lengkapkan simulasi, aktiviti padanan dan lulus kuiz
+                untuk membuka butang penamatan misi.
+            </p>
+
+            <button type="button" id="completeMissionBtn" class="complete-button" disabled>
+                <i class="fa-solid fa-lock"></i>
+                Lengkapkan Misi 05
+            </button>
+        </section>
+
+        <section class="bottom-navigation">
+            <button type="button" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-house"></i>
+                Kembali ke Dashboard
+            </button>
+
+            <button type="button" id="nextMissionBtn" disabled>
+                Misi Seterusnya
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </section>
+
+    </main>
+
+    <script src="missions.js"></script>
+    <script src="storage-engine.js"></script>
+    <script src="player-engine.js"></script>
+    <script src="mission-engine.js"></script>
+    <script src="achievement-engine.js"></script>
+    <script src="ui-engine.js"></script>
+    <script src="lesson5.js"></script>
+</body>
+</html>
