@@ -1109,3 +1109,104 @@ footer strong {
         font-size: 1.5rem;
     }
 }
+
+/* ======================================================
+   STUDENT LOGIN SCREEN V5.1
+   ====================================================== */
+
+.student-login-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(2, 8, 23, 0.94);
+    backdrop-filter: blur(12px);
+}
+
+.student-login-card {
+    width: min(100%, 480px);
+    padding: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    background: linear-gradient(145deg, #152b47, #091525);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+    color: #f8fafc;
+}
+
+.student-login-icon {
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 4rem;
+}
+
+.student-login-card h2 {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.student-login-card p {
+    margin-bottom: 22px;
+    color: #b8c7d9;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.student-login-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.student-login-card input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 13px;
+    background: #1a2f4b;
+    color: #ffffff;
+    outline: none;
+}
+
+.student-login-card input:focus {
+    border-color: #22b7ff;
+    box-shadow: 0 0 0 4px rgba(34, 183, 255, 0.12);
+}
+
+.student-login-card button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    border: 0;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #1686ff, #22b7ff);
+    color: #ffffff;
+    font-weight: 800;
+    transition: 0.25s ease;
+}
+
+.student-login-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(22, 134, 255, 0.25);
+}
+
+.student-login-error {
+    min-height: 24px;
+    margin-top: 10px;
+    color: #ffc7c7;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 520px) {
+    .student-login-card {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .student-login-icon {
+        font-size: 3.4rem;
+    }
+}
+
