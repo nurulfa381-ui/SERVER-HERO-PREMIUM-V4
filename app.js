@@ -1,32 +1,16 @@
 // ======================================================
-// SERVER HERO PREMIUM V5.2
-// app.js - FINAL COMPATIBLE DASHBOARD CONTROLLER
-// 13 MISSIONS + STUDENT LOGIN
+// SERVER HERO PREMIUM V5.3
+// app.js - STANDALONE DASHBOARD
+// 13 MISSIONS + STUDENT LOGIN + REPORT + CERTIFICATE
 // ======================================================
 
 "use strict";
-
-
-// ======================================================
-// DATABASE CHECK
-// ======================================================
 
 const MISSION_LIST = Array.isArray(window.missions)
     ? window.missions
     : [];
 
-if (MISSION_LIST.length === 0) {
-    console.error(
-        "SERVER HERO: missions.js tidak dimuatkan atau senarai misi kosong."
-    );
-}
-
-
-// ======================================================
-// STORAGE KEYS
-// ======================================================
-
-const STORAGE_KEYS = Object.freeze({
+const STORAGE = Object.freeze({
     player: "serverHeroPlayerV4",
     achievements: "serverHeroAchievementsV4",
     history: "serverHeroHistoryV4",
@@ -44,106 +28,36 @@ const DEFAULT_PLAYER = Object.freeze({
 });
 
 const ACHIEVEMENTS = Object.freeze([
-    {
-        id: "first-mission",
-        title: "Misi Pertama",
-        target: 1,
-        rewardXP: 100
-    },
-    {
-        id: "server-explorer",
-        title: "Server Explorer",
-        target: 3,
-        rewardXP: 250
-    },
-    {
-        id: "server-specialist",
-        title: "Server Specialist",
-        target: 5,
-        rewardXP: 400
-    },
-    {
-        id: "server-hero",
-        title: "Server Hero",
-        target: 8,
-        rewardXP: 800
-    },
-    {
-        id: "server-master",
-        title: "Server Hero Master",
-        target: 13,
-        rewardXP: 1500
-    }
+    { id: "first-mission", title: "Misi Pertama", target: 1, rewardXP: 100 },
+    { id: "server-explorer", title: "Server Explorer", target: 3, rewardXP: 250 },
+    { id: "server-specialist", title: "Server Specialist", target: 5, rewardXP: 400 },
+    { id: "server-hero", title: "Server Hero", target: 8, rewardXP: 800 },
+    { id: "server-master", title: "Server Hero Master", target: 13, rewardXP: 1500 }
 ]);
-
-
-// ======================================================
-// STORAGE HELPERS
-// ======================================================
 
 function readJSON(key, fallback) {
     try {
         const raw = localStorage.getItem(key);
-
-        if (!raw) {
-            return fallback;
-        }
-
-        const parsed = JSON.parse(raw);
-
-        return parsed ?? fallback;
-    } catch (error) {
-        console.warn(`Gagal membaca ${key}:`, error);
+        return raw ? JSON.parse(raw) : fallback;
+    } catch {
         return fallback;
     }
 }
 
 function writeJSON(key, value) {
-    try {
-        localStorage.setItem(
-            key,
-            JSON.stringify(value)
-        );
-
-        return true;
-    } catch (error) {
-        console.error(`Gagal menyimpan ${key}:`, error);
-        return false;
-    }
+    localStorage.setItem(key, JSON.stringify(value));
 }
-
-
-// ======================================================
-// APPLICATION STATE
-// ======================================================
 
 let player = {
     ...DEFAULT_PLAYER,
-    ...readJSON(STORAGE_KEYS.player, {})
+    ...readJSON(STORAGE.player, {})
 };
 
-let unlockedAchievements = readJSON(
-    STORAGE_KEYS.achievements,
-    []
-);
+let unlockedAchievements = readJSON(STORAGE.achievements, []);
+if (!Array.isArray(unlockedAchievements)) unlockedAchievements = [];
 
-if (!Array.isArray(unlockedAchievements)) {
-    unlockedAchievements = [];
-}
-
-let missionHistory = readJSON(
-    STORAGE_KEYS.history,
-    []
-);
-
-if (!Array.isArray(missionHistory)) {
-    missionHistory = [];
-}
-
-
-// ======================================================
-// DOM REFERENCES
-// ======================================================
+let missionHistory = readJSON(STORAGE.history, []);
+if (!Array.isArray(missionHistory)) missionHistory = [];
 
 const DOM = Object.freeze({
     missions: document.getElementById("missions"),
@@ -158,1022 +72,512 @@ const DOM = Object.freeze({
     percent: document.getElementById("percent"),
     dailyMission: document.getElementById("dailyMission"),
     masterPanel: document.getElementById("masterPanel"),
-    profileName: document.querySelector(".profile-content strong")
+    studentDisplayName: document.getElementById("studentDisplayName")
 });
 
-
-// ======================================================
-// GENERAL HELPERS
-// ======================================================
-
-function setText(element, value) {
-    if (element) {
-        element.textContent = String(value);
-    }
-}
-
 function escapeHTML(value) {
-    const container = document.createElement("div");
-
-    container.textContent = String(
-        value ?? ""
-    );
-
-    return container.innerHTML;
+    const div = document.createElement("div");
+    div.textContent = String(value ?? "");
+    return div.innerHTML;
 }
 
-function getMissionById(missionId) {
-    return MISSION_LIST.find(
-        mission =>
-            Number(mission.id) ===
-            Number(missionId)
-    ) || null;
+function completeKey(id) {
+    return `lesson${Number(id)}Complete`;
 }
 
-function missionCompleteKey(missionId) {
-    return `lesson${Number(missionId)}Complete`;
+function rewardedKey(id) {
+    return `lesson${Number(id)}RewardedV4`;
 }
 
-function missionRewardKey(missionId) {
-    return `lesson${Number(missionId)}RewardedV4`;
+function isCompleted(id) {
+    return localStorage.getItem(completeKey(id)) === "true";
 }
 
-function isMissionCompleted(missionId) {
-    return (
-        localStorage.getItem(
-            missionCompleteKey(missionId)
-        ) === "true"
-    );
+function isRewarded(id) {
+    return localStorage.getItem(rewardedKey(id)) === "true";
 }
 
-function isMissionRewarded(missionId) {
-    return (
-        localStorage.getItem(
-            missionRewardKey(missionId)
-        ) === "true"
-    );
+function isUnlocked(id) {
+    const missionId = Number(id);
+    return missionId === 1 || isCompleted(missionId - 1);
 }
 
-function isMissionUnlocked(missionId) {
-    const id = Number(missionId);
-
-    return (
-        id === 1 ||
-        isMissionCompleted(id - 1)
-    );
+function completedCount() {
+    return MISSION_LIST.filter(mission => isCompleted(mission.id)).length;
 }
-
-function getCompletedMissionCount() {
-    return MISSION_LIST.filter(
-        mission =>
-            isMissionCompleted(
-                mission.id
-            )
-    ).length;
-}
-
-function saveApplicationData() {
-    writeJSON(
-        STORAGE_KEYS.player,
-        player
-    );
-
-    writeJSON(
-        STORAGE_KEYS.achievements,
-        unlockedAchievements
-    );
-
-    writeJSON(
-        STORAGE_KEYS.history,
-        missionHistory
-    );
-}
-
-
-// ======================================================
-// PLAYER CALCULATIONS
-// ======================================================
 
 function calculatePlayer() {
-    player.completed =
-        getCompletedMissionCount();
+    player.completed = completedCount();
+    player.level = Math.max(1, Math.floor(Number(player.xp || 0) / 500));
 
-    player.level =
-        Math.max(
-            1,
-            Math.floor(
-                Number(player.xp || 0) /
-                500
-            )
-        );
-
-    if (
-        player.completed >=
-        MISSION_LIST.length &&
-        MISSION_LIST.length > 0
-    ) {
-        player.rank =
-            "SERVER HERO MASTER";
+    if (MISSION_LIST.length > 0 && player.completed >= MISSION_LIST.length) {
+        player.rank = "SERVER HERO MASTER";
     } else if (player.xp >= 9000) {
-        player.rank =
-            "Master";
+        player.rank = "Master";
     } else if (player.xp >= 6500) {
-        player.rank =
-            "Elite";
+        player.rank = "Elite";
     } else if (player.xp >= 4000) {
-        player.rank =
-            "Professional";
+        player.rank = "Professional";
     } else if (player.xp >= 2000) {
-        player.rank =
-            "Advanced";
+        player.rank = "Advanced";
     } else {
-        player.rank =
-            "Beginner";
+        player.rank = "Beginner";
     }
 }
 
+function saveData() {
+    writeJSON(STORAGE.player, player);
+    writeJSON(STORAGE.achievements, unlockedAchievements);
+    writeJSON(STORAGE.history, missionHistory);
+}
 
-// ======================================================
-// MISSION REWARD SYNCHRONIZATION
-// ======================================================
-
-function synchronizeMissionRewards() {
+function synchronizeRewards() {
     let changed = false;
 
-    MISSION_LIST.forEach(
-        mission => {
-            if (
-                !isMissionCompleted(
-                    mission.id
-                ) ||
-                isMissionRewarded(
-                    mission.id
-                )
-            ) {
-                return;
-            }
+    MISSION_LIST.forEach(mission => {
+        if (!isCompleted(mission.id) || isRewarded(mission.id)) return;
 
-            player.xp +=
-                Number(
-                    mission.xp
-                ) || 0;
+        player.xp += Number(mission.xp) || 0;
+        localStorage.setItem(rewardedKey(mission.id), "true");
 
-            localStorage.setItem(
-                missionRewardKey(
-                    mission.id
-                ),
-                "true"
-            );
+        missionHistory.unshift({
+            id: mission.id,
+            title: mission.subtitle,
+            completedAt: new Date().toISOString()
+        });
 
-            missionHistory.unshift({
-                id: mission.id,
-                title: mission.subtitle,
-                completedAt:
-                    new Date().toISOString()
-            });
+        changed = true;
+    });
 
-            changed = true;
-        }
-    );
-
-    missionHistory =
-        missionHistory.slice(
-            0,
-            50
-        );
+    missionHistory = missionHistory.slice(0, 50);
 
     if (changed) {
-        player.streak =
-            Number(player.streak || 1) + 1;
-
-        saveApplicationData();
+        player.streak = Number(player.streak || 1) + 1;
+        saveData();
     }
 }
 
+function checkAchievements() {
+    calculatePlayer();
+    let changed = false;
 
-// ======================================================
-// DASHBOARD
-// ======================================================
+    ACHIEVEMENTS.forEach(achievement => {
+        if (
+            player.completed >= achievement.target &&
+            !unlockedAchievements.includes(achievement.id)
+        ) {
+            unlockedAchievements.push(achievement.id);
+            player.xp += achievement.rewardXP;
+            changed = true;
+        }
+    });
+
+    if (changed) saveData();
+
+    document.querySelectorAll(".achievement-card").forEach(card => {
+        card.classList.toggle(
+            "unlocked",
+            unlockedAchievements.includes(card.dataset.achievementId)
+        );
+    });
+}
 
 function updateDashboard() {
     calculatePlayer();
 
-    setText(
-        DOM.xp,
-        player.xp
-    );
+    const name = localStorage.getItem(STORAGE.studentName) || "AGENT";
+    player.name = name;
 
-    setText(
-        DOM.level,
-        player.level
-    );
+    if (DOM.studentDisplayName) DOM.studentDisplayName.textContent = name;
+    if (DOM.xp) DOM.xp.textContent = player.xp;
+    if (DOM.level) DOM.level.textContent = player.level;
+    if (DOM.rank) DOM.rank.textContent = player.rank;
+    if (DOM.rankText) DOM.rankText.textContent = player.rank;
+    if (DOM.streak) DOM.streak.textContent = `${player.streak || 1} Hari`;
+    if (DOM.achievementCount) DOM.achievementCount.textContent = unlockedAchievements.length;
+    if (DOM.completion) DOM.completion.textContent = `${player.completed} / ${MISSION_LIST.length}`;
 
-    setText(
-        DOM.rank,
-        player.rank
-    );
+    const percentage = MISSION_LIST.length
+        ? Math.round((player.completed / MISSION_LIST.length) * 100)
+        : 0;
 
-    setText(
-        DOM.rankText,
-        player.rank
-    );
-
-    setText(
-        DOM.streak,
-        `${player.streak || 1} Hari`
-    );
-
-    setText(
-        DOM.achievementCount,
-        unlockedAchievements.length
-    );
-
-    setText(
-        DOM.completion,
-        `${player.completed} / ${MISSION_LIST.length}`
-    );
-
-    const percentage =
-        MISSION_LIST.length > 0
-            ? Math.round(
-                (
-                    player.completed /
-                    MISSION_LIST.length
-                ) * 100
-            )
-            : 0;
-
-    if (DOM.progress) {
-        DOM.progress.value =
-            percentage;
-    }
-
-    setText(
-        DOM.percent,
-        `${percentage}%`
-    );
+    if (DOM.progress) DOM.progress.value = percentage;
+    if (DOM.percent) DOM.percent.textContent = `${percentage}%`;
 
     if (DOM.dailyMission) {
-        DOM.dailyMission.textContent =
-            "Lengkapkan satu misi server hari ini.";
-    }
-
-    const studentName =
-        localStorage.getItem(
-            STORAGE_KEYS.studentName
-        );
-
-    if (DOM.profileName) {
-        DOM.profileName.textContent =
-            studentName || "AGENT";
+        DOM.dailyMission.textContent = "Lengkapkan satu misi server hari ini.";
     }
 
     if (DOM.masterPanel) {
-        const completedAll =
-            MISSION_LIST.length > 0 &&
-            player.completed >=
-                MISSION_LIST.length;
+        const completeAll = MISSION_LIST.length > 0 && player.completed >= MISSION_LIST.length;
+        DOM.masterPanel.classList.toggle("hidden", !completeAll);
 
-        DOM.masterPanel.classList.toggle(
-            "hidden",
-            !completedAll
-        );
-
-        if (completedAll) {
-            localStorage.setItem(
-                STORAGE_KEYS.masterUnlocked,
-                "true"
-            );
+        if (completeAll) {
+            localStorage.setItem(STORAGE.masterUnlocked, "true");
         }
     }
 
-    saveApplicationData();
+    saveData();
 }
 
-
-// ======================================================
-// MISSION CARD ENGINE
-// ======================================================
-
 function createMissionCards() {
-    if (!DOM.missions) {
-        console.error(
-            'SERVER HERO: Elemen id="missions" tidak dijumpai.'
-        );
-
-        return;
-    }
+    if (!DOM.missions) return;
 
     DOM.missions.innerHTML = "";
 
-    if (MISSION_LIST.length === 0) {
+    if (!MISSION_LIST.length) {
         DOM.missions.innerHTML = `
             <article class="mission-card">
                 <h2>Data misi tidak dijumpai</h2>
-                <p>Semak fail missions.js dan susunan script dalam index.html.</p>
+                <p>Semak missions.js. Pastikan fail itu dimuatkan sebelum app.js.</p>
             </article>
         `;
-
         return;
     }
 
-    MISSION_LIST.forEach(
-        mission => {
-            const completed =
-                isMissionCompleted(
-                    mission.id
-                );
+    MISSION_LIST.forEach(mission => {
+        const completed = isCompleted(mission.id);
+        const unlocked = isUnlocked(mission.id);
+        const card = document.createElement("article");
 
-            const unlocked =
-                isMissionUnlocked(
-                    mission.id
-                );
+        card.className = "mission-card";
+        card.dataset.missionId = String(mission.id);
 
-            const card =
-                document.createElement(
-                    "article"
-                );
+        if (completed) card.classList.add("completed");
+        else if (!unlocked) card.classList.add("locked");
 
-            card.className =
-                "mission-card";
+        const buttonLabel = completed
+            ? "Selesai"
+            : unlocked
+                ? "Mulakan Misi"
+                : "Terkunci";
 
-            card.dataset.missionId =
-                String(
-                    mission.id
-                );
+        const statusIcon = completed
+            ? "✅"
+            : unlocked
+                ? "🔓"
+                : "🔒";
 
-            if (completed) {
-                card.classList.add(
-                    "completed"
-                );
-            } else if (!unlocked) {
-                card.classList.add(
-                    "locked"
-                );
-            }
-
-            const buttonLabel =
-                completed
-                    ? "Selesai"
-                    : unlocked
-                        ? "Mulakan Misi"
-                        : "Terkunci";
-
-            const statusIcon =
-                completed
-                    ? "✅"
-                    : unlocked
-                        ? "🔓"
-                        : "🔒";
-
-            card.innerHTML = `
-                <div class="mission-header">
-                    <div>
-                        <h2>
-                            ${escapeHTML(mission.icon)}
-                            ${escapeHTML(mission.title)}
-                        </h2>
-
-                        <h4>
-                            ${escapeHTML(mission.subtitle)}
-                        </h4>
-                    </div>
-
-                    <span class="badge">
-                        ${Number(mission.xp) || 0} XP
-                    </span>
+        card.innerHTML = `
+            <div class="mission-header">
+                <div>
+                    <h2>${escapeHTML(mission.icon)} ${escapeHTML(mission.title)}</h2>
+                    <h4>${escapeHTML(mission.subtitle)}</h4>
                 </div>
+                <span class="badge">${Number(mission.xp) || 0} XP</span>
+            </div>
 
-                <p>
-                    ${escapeHTML(mission.description)}
-                </p>
+            <p>${escapeHTML(mission.description)}</p>
 
-                <div class="mission-info">
-                    <span>
-                        🎯 ${escapeHTML(mission.difficulty)}
-                    </span>
+            <div class="mission-info">
+                <span>🎯 ${escapeHTML(mission.difficulty)}</span>
+                <span>⏱ ${escapeHTML(mission.duration)}</span>
+            </div>
 
-                    <span>
-                        ⏱ ${escapeHTML(mission.duration)}
-                    </span>
-                </div>
+            <div class="mission-footer">
+                <span class="mission-status">${statusIcon}</span>
+                <button type="button" ${completed || !unlocked ? "disabled" : ""}>
+                    ${buttonLabel}
+                </button>
+            </div>
+        `;
 
-                <div class="mission-footer">
-                    <span class="mission-status">
-                        ${statusIcon}
-                    </span>
+        const button = card.querySelector("button");
 
-                    <button
-                        type="button"
-                        ${
-                            completed || !unlocked
-                                ? "disabled"
-                                : ""
-                        }
-                    >
-                        ${buttonLabel}
-                    </button>
-                </div>
-            `;
-
-            const button =
-                card.querySelector(
-                    "button"
-                );
-
-            if (
-                button &&
-                unlocked &&
-                !completed
-            ) {
-                button.addEventListener(
-                    "click",
-                    () =>
-                        openMission(
-                            mission.id
-                        )
-                );
-            }
-
-            DOM.missions.appendChild(
-                card
-            );
+        if (button && unlocked && !completed) {
+            button.addEventListener("click", () => {
+                window.location.href = mission.page;
+            });
         }
-    );
+
+        DOM.missions.appendChild(card);
+    });
 }
-
-
-// ======================================================
-// MISSION NAVIGATION
-// ======================================================
-
-function openMission(missionId) {
-    const mission =
-        getMissionById(
-            missionId
-        );
-
-    if (!mission) {
-        showToast(
-            "Misi tidak dijumpai.",
-            "error"
-        );
-
-        return;
-    }
-
-    if (
-        !isMissionUnlocked(
-            missionId
-        )
-    ) {
-        showToast(
-            "Selesaikan misi sebelumnya dahulu.",
-            "error"
-        );
-
-        return;
-    }
-
-    window.location.href =
-        mission.page;
-}
-
-
-// ======================================================
-// ACHIEVEMENTS
-// ======================================================
-
-function checkAchievements() {
-    calculatePlayer();
-
-    let changed = false;
-
-    ACHIEVEMENTS.forEach(
-        achievement => {
-            if (
-                player.completed >=
-                    achievement.target &&
-                !unlockedAchievements.includes(
-                    achievement.id
-                )
-            ) {
-                unlockedAchievements.push(
-                    achievement.id
-                );
-
-                player.xp +=
-                    achievement.rewardXP;
-
-                changed = true;
-
-                showToast(
-                    `🏆 ${achievement.title} dibuka! +${achievement.rewardXP} XP`,
-                    "success"
-                );
-            }
-        }
-    );
-
-    if (changed) {
-        calculatePlayer();
-        saveApplicationData();
-    }
-
-    updateAchievementCards();
-}
-
-function updateAchievementCards() {
-    document
-        .querySelectorAll(
-            ".achievement-card"
-        )
-        .forEach(
-            card => {
-                const achievementId =
-                    card.dataset
-                        .achievementId;
-
-                if (!achievementId) {
-                    return;
-                }
-
-                card.classList.toggle(
-                    "unlocked",
-                    unlockedAchievements.includes(
-                        achievementId
-                    )
-                );
-            }
-        );
-}
-
-
-// ======================================================
-// STUDENT LOGIN
-// ======================================================
 
 function showStudentLogin() {
-    const savedName =
-        localStorage.getItem(
-            STORAGE_KEYS.studentName
-        );
+    if (localStorage.getItem(STORAGE.studentName)) return;
 
-    if (savedName) {
-        if (DOM.profileName) {
-            DOM.profileName.textContent =
-                savedName;
-        }
-
-        return;
-    }
-
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-    overlay.className =
-        "student-login-overlay";
+    const overlay = document.createElement("div");
+    overlay.className = "student-login-overlay";
 
     overlay.innerHTML = `
         <form class="student-login-card">
-            <div class="student-login-icon">
-                👩‍💻
-            </div>
+            <div class="student-login-icon">👩‍💻</div>
+            <h2>Selamat Datang ke SERVER HERO</h2>
+            <p>Masukkan nama pelajar sebelum memulakan pembelajaran.</p>
 
-            <h2>
-                Selamat Datang ke SERVER HERO
-            </h2>
-
-            <p>
-                Masukkan nama pelajar sebelum memulakan pembelajaran.
-            </p>
-
-            <label for="studentNameInput">
-                Nama Pelajar
-            </label>
+            <label for="studentNameInput">Nama Pelajar</label>
 
             <input
                 id="studentNameInput"
                 type="text"
                 maxlength="60"
-                autocomplete="name"
                 placeholder="Contoh: Nurul Farhana"
+                autocomplete="name"
                 required
             >
 
-            <button type="submit">
-                Mula Pembelajaran
-            </button>
-
-            <div
-                class="student-login-error"
-                aria-live="polite"
-            ></div>
+            <button type="submit">Mula Pembelajaran</button>
+            <div class="student-login-error" aria-live="polite"></div>
         </form>
     `;
 
-    document.body.appendChild(
-        overlay
-    );
+    document.body.appendChild(overlay);
 
-    const form =
-        overlay.querySelector(
-            "form"
-        );
+    const form = overlay.querySelector("form");
+    const input = overlay.querySelector("input");
+    const errorBox = overlay.querySelector(".student-login-error");
 
-    const input =
-        overlay.querySelector(
-            "input"
-        );
+    form.addEventListener("submit", event => {
+        event.preventDefault();
 
-    const errorBox =
-        overlay.querySelector(
-            ".student-login-error"
-        );
+        const name = input.value.trim();
 
-    form.addEventListener(
-        "submit",
-        event => {
-            event.preventDefault();
-
-            const name =
-                input.value.trim();
-
-            if (name.length < 2) {
-                errorBox.textContent =
-                    "Sila masukkan nama pelajar yang sah.";
-
-                return;
-            }
-
-            localStorage.setItem(
-                STORAGE_KEYS.studentName,
-                name
-            );
-
-            player.name =
-                name;
-
-            saveApplicationData();
-
-            if (DOM.profileName) {
-                DOM.profileName.textContent =
-                    name;
-            }
-
-            overlay.remove();
+        if (name.length < 2) {
+            errorBox.textContent = "Sila masukkan nama pelajar yang sah.";
+            return;
         }
-    );
 
-    setTimeout(
-        () =>
-            input.focus(),
-        100
-    );
+        localStorage.setItem(STORAGE.studentName, name);
+        player.name = name;
+        saveData();
+
+        if (DOM.studentDisplayName) {
+            DOM.studentDisplayName.textContent = name;
+        }
+
+        overlay.remove();
+    });
+
+    setTimeout(() => input.focus(), 100);
 }
 
+function openPlayerReport() {
+    calculatePlayer();
 
-// ======================================================
-// EXPORT / IMPORT
-// ======================================================
+    const reportWindow = window.open("", "_blank");
+
+    if (!reportWindow) {
+        alert("Benarkan pop-up untuk membuka laporan.");
+        return;
+    }
+
+    const completedMissions = MISSION_LIST
+        .filter(mission => isCompleted(mission.id))
+        .map(mission => `<li>${escapeHTML(mission.title)} — ${escapeHTML(mission.subtitle)}</li>`)
+        .join("");
+
+    reportWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ms">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Laporan Kemajuan SERVER HERO</title>
+            <style>
+                body{font-family:Arial,sans-serif;padding:32px;color:#111827}
+                h1{color:#1d4ed8}
+                .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0}
+                .card{padding:15px;border:1px solid #d1d5db;border-radius:12px}
+                li{margin-bottom:8px}
+                button{padding:12px 18px;border:0;border-radius:10px;background:#1d4ed8;color:white;font-weight:bold}
+                @media print{button{display:none}}
+            </style>
+        </head>
+        <body>
+            <h1>Laporan Kemajuan SERVER HERO</h1>
+            <p><strong>Nama Pelajar:</strong> ${escapeHTML(player.name)}</p>
+
+            <div class="summary">
+                <div class="card"><strong>XP:</strong> ${player.xp}</div>
+                <div class="card"><strong>Level:</strong> ${player.level}</div>
+                <div class="card"><strong>Pangkat:</strong> ${escapeHTML(player.rank)}</div>
+                <div class="card"><strong>Misi Selesai:</strong> ${player.completed} / ${MISSION_LIST.length}</div>
+            </div>
+
+            <h2>Senarai Misi Selesai</h2>
+            <ol>${completedMissions || "<li>Belum ada misi selesai.</li>"}</ol>
+
+            <button onclick="window.print()">Cetak Laporan</button>
+        </body>
+        </html>
+    `);
+
+    reportWindow.document.close();
+}
+
+function openCertificate() {
+    calculatePlayer();
+
+    if (player.completed < MISSION_LIST.length) {
+        alert(`Sijil hanya boleh dijana selepas semua ${MISSION_LIST.length} misi selesai.`);
+        return;
+    }
+
+    const certificateWindow = window.open("", "_blank");
+
+    if (!certificateWindow) {
+        alert("Benarkan pop-up untuk membuka sijil.");
+        return;
+    }
+
+    certificateWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="ms">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Sijil SERVER HERO MASTER</title>
+            <style>
+                body{margin:0;background:#eef2ff;font-family:Georgia,serif;padding:30px}
+                .certificate{max-width:1000px;margin:auto;padding:70px;border:14px double #1d4ed8;background:white;text-align:center}
+                h1{font-size:48px;color:#1d4ed8;margin:10px 0}
+                h2{font-size:38px;margin:25px 0;color:#7c3aed}
+                p{font-size:20px;line-height:1.7}
+                .badge{font-size:70px}
+                button{margin-top:30px;padding:12px 20px;border:0;border-radius:10px;background:#1d4ed8;color:white;font-weight:bold}
+                @media print{body{background:white;padding:0}.certificate{border-width:10px}button{display:none}}
+            </style>
+        </head>
+        <body>
+            <section class="certificate">
+                <div class="badge">👑</div>
+                <h1>SIJIL TAMAT</h1>
+                <p>Dengan ini diperakui bahawa</p>
+                <h2>${escapeHTML(player.name)}</h2>
+                <p>telah berjaya menamatkan semua 13 misi</p>
+                <p><strong>SERVER HERO PREMIUM — Windows Server 2019</strong></p>
+                <p>dan menerima gelaran</p>
+                <h2>SERVER HERO MASTER</h2>
+                <button onclick="window.print()">Cetak Sijil</button>
+            </section>
+        </body>
+        </html>
+    `);
+
+    certificateWindow.document.close();
+}
 
 function exportSave() {
-    const payload = {
-        version: "5.2",
-        exportedAt:
-            new Date().toISOString(),
-        studentName:
-            localStorage.getItem(
-                STORAGE_KEYS.studentName
-            ) || "",
+    const data = {
+        version: "5.3",
+        studentName: localStorage.getItem(STORAGE.studentName) || "",
         player,
-        achievements:
-            unlockedAchievements,
-        history:
-            missionHistory,
-        missions:
-            MISSION_LIST.map(
-                mission => ({
-                    id:
-                        mission.id,
-                    completed:
-                        isMissionCompleted(
-                            mission.id
-                        ),
-                    rewarded:
-                        isMissionRewarded(
-                            mission.id
-                        )
-                })
-            )
+        achievements: unlockedAchievements,
+        history: missionHistory,
+        missions: MISSION_LIST.map(mission => ({
+            id: mission.id,
+            completed: isCompleted(mission.id),
+            rewarded: isRewarded(mission.id)
+        }))
     };
 
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    payload,
-                    null,
-                    2
-                )
-            ],
-            {
-                type:
-                    "application/json"
-            }
-        );
-
-    const url =
-        URL.createObjectURL(
-            blob
-        );
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-    link.href =
-        url;
-
-    link.download =
-        "server-hero-save.json";
-
-    document.body.appendChild(
-        link
+    const blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        { type: "application/json" }
     );
 
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "server-hero-save.json";
     link.click();
-    link.remove();
 
-    URL.revokeObjectURL(
-        url
-    );
-
-    showToast(
-        "Simpanan berjaya dieksport.",
-        "success"
-    );
+    URL.revokeObjectURL(url);
 }
 
 function importSave() {
-    const input =
-        document.createElement(
-            "input"
-        );
+    const input = document.createElement("input");
 
-    input.type =
-        "file";
+    input.type = "file";
+    input.accept = ".json,application/json";
 
-    input.accept =
-        ".json,application/json";
+    input.addEventListener("change", async () => {
+        const file = input.files?.[0];
+        if (!file) return;
 
-    input.addEventListener(
-        "change",
-        async () => {
-            const file =
-                input.files?.[0];
+        try {
+            const data = JSON.parse(await file.text());
 
-            if (!file) {
-                return;
+            player = {
+                ...DEFAULT_PLAYER,
+                ...(data.player || {})
+            };
+
+            unlockedAchievements = Array.isArray(data.achievements)
+                ? data.achievements
+                : [];
+
+            missionHistory = Array.isArray(data.history)
+                ? data.history
+                : [];
+
+            if (data.studentName) {
+                localStorage.setItem(STORAGE.studentName, String(data.studentName));
             }
 
-            try {
-                const data =
-                    JSON.parse(
-                        await file.text()
-                    );
-
-                player = {
-                    ...DEFAULT_PLAYER,
-                    ...(data.player || {})
-                };
-
-                unlockedAchievements =
-                    Array.isArray(
-                        data.achievements
-                    )
-                        ? data.achievements
-                        : [];
-
-                missionHistory =
-                    Array.isArray(
-                        data.history
-                    )
-                        ? data.history
-                        : [];
-
-                if (data.studentName) {
+            if (Array.isArray(data.missions)) {
+                data.missions.forEach(item => {
                     localStorage.setItem(
-                        STORAGE_KEYS.studentName,
-                        String(data.studentName)
+                        completeKey(item.id),
+                        item.completed ? "true" : "false"
                     );
-                }
 
-                if (
-                    Array.isArray(
-                        data.missions
-                    )
-                ) {
-                    data.missions.forEach(
-                        savedMission => {
-                            const id =
-                                Number(
-                                    savedMission.id
-                                );
-
-                            if (
-                                !Number.isInteger(id) ||
-                                id < 1 ||
-                                id > MISSION_LIST.length
-                            ) {
-                                return;
-                            }
-
-                            localStorage.setItem(
-                                missionCompleteKey(id),
-                                savedMission.completed
-                                    ? "true"
-                                    : "false"
-                            );
-
-                            localStorage.setItem(
-                                missionRewardKey(id),
-                                savedMission.rewarded
-                                    ? "true"
-                                    : "false"
-                            );
-                        }
+                    localStorage.setItem(
+                        rewardedKey(item.id),
+                        item.rewarded ? "true" : "false"
                     );
-                }
-
-                saveApplicationData();
-
-                window.location.reload();
-            } catch (error) {
-                console.error(
-                    error
-                );
-
-                window.alert(
-                    "Fail simpanan tidak sah."
-                );
+                });
             }
+
+            saveData();
+            location.reload();
+        } catch {
+            alert("Fail simpanan tidak sah.");
         }
-    );
+    });
 
     input.click();
 }
 
-
-// ======================================================
-// RESET
-// ======================================================
-
 function resetProgress() {
-    const confirmed =
-        window.confirm(
-            "Padam semua kemajuan, XP dan nama pelajar?"
-        );
+    if (!confirm("Padam semua kemajuan, XP dan nama pelajar?")) return;
 
-    if (!confirmed) {
-        return;
-    }
+    MISSION_LIST.forEach(mission => {
+        localStorage.removeItem(completeKey(mission.id));
+        localStorage.removeItem(rewardedKey(mission.id));
+    });
 
-    MISSION_LIST.forEach(
-        mission => {
-            localStorage.removeItem(
-                missionCompleteKey(
-                    mission.id
-                )
-            );
-
-            localStorage.removeItem(
-                missionRewardKey(
-                    mission.id
-                )
-            );
-        }
-    );
-
-    Object.values(
-        STORAGE_KEYS
-    ).forEach(
-        key =>
-            localStorage.removeItem(
-                key
-            )
-    );
-
-    window.location.reload();
+    Object.values(STORAGE).forEach(key => localStorage.removeItem(key));
+    location.reload();
 }
 
-
-// ======================================================
-// UI NOTIFICATION
-// ======================================================
-
-function showToast(
-    message,
-    type = "info"
-) {
-    const existing =
-        document.querySelector(
-            ".toast"
-        );
-
-    if (existing) {
-        existing.remove();
-    }
-
-    const toast =
-        document.createElement(
-            "div"
-        );
-
-    toast.className =
-        `toast ${type}`;
-
-    toast.textContent =
-        message;
-
-    document.body.appendChild(
-        toast
-    );
-
-    requestAnimationFrame(
-        () =>
-            toast.classList.add(
-                "show"
-            )
-    );
-
-    setTimeout(
-        () =>
-            toast.classList.remove(
-                "show"
-            ),
-        2600
-    );
-
-    setTimeout(
-        () =>
-            toast.remove(),
-        3200
-    );
-}
-
-
-// ======================================================
-// GLOBAL API
-// ======================================================
-
-window.openMission =
-    openMission;
-
-window.exportSave =
-    exportSave;
-
-window.importSave =
-    importSave;
-
-window.resetProgress =
-    resetProgress;
+window.openPlayerReport = openPlayerReport;
+window.openCertificate = openCertificate;
+window.exportSave = exportSave;
+window.importSave = importSave;
+window.resetProgress = resetProgress;
 
 window.SERVER_HERO = {
-    version: "5.2",
-
-    getPlayer() {
-        return {
-            ...player
-        };
-    },
-
+    version: "5.3",
+    getPlayer: () => ({ ...player }),
     refresh() {
-        synchronizeMissionRewards();
+        synchronizeRewards();
         checkAchievements();
         updateDashboard();
         createMissionCards();
     }
 };
 
-
-// ======================================================
-// INITIALIZATION
-// ======================================================
-
-function initializeServerHero() {
-    synchronizeMissionRewards();
+function initialize() {
+    synchronizeRewards();
     checkAchievements();
     updateDashboard();
     createMissionCards();
     showStudentLogin();
 
-    console.log(
-        `SERVER HERO V5.2 READY - ${MISSION_LIST.length} MISI`
-    );
+    console.log(`SERVER HERO V5.3 READY — ${MISSION_LIST.length} MISI`);
 }
 
-initializeServerHero();
+initialize();
