@@ -23,7 +23,7 @@ placeholder:"Type a short question...",send:"Send",
 unknown:"I do not have a specific answer for that yet. Try Tip or Read Page.",
 dashboardTip:"Start with a mission marked AVAILABLE. Complete its activity and quiz to unlock the next mission.",
 kp01Tip:"Focus on the server Tag/ID, specifications, operating system, warranty and operating manual.",
-kp02Tip:"Distinguish preventive, corrective and predictive maintenance. Remember backups and records.",kp03Tip:"Focus on access control, temperature, humidity, fire safety, UPS and emergency procedures.",kp04Tip:"Select tools according to the task. Prioritise ESD protection, safe shutdown and never force components.",kp05Tip:"Follow the installation order: boot media, language, edition, Custom Installation, partition and Administrator password.",kp06Tip:"AD DS Virtual Lab: install the role, choose Add a new forest, use serverhero.local and set a DSRM password.",kp07Tip:"DNS Virtual Lab: create the Primary Forward Lookup Zone serverhero.local, add the dc01 A record and test with nslookup.",
+kp02Tip:"Distinguish preventive, corrective and predictive maintenance. Remember backups and records.",kp03Tip:"Focus on access control, temperature, humidity, fire safety, UPS and emergency procedures.",kp04Tip:"Select tools according to the task. Prioritise ESD protection, safe shutdown and never force components.",kp05Tip:"Follow the installation order: boot media, language, edition, Custom Installation, partition and Administrator password.",kp06Tip:"AD DS Virtual Lab: install the role, choose Add a new forest, use serverhero.local and set a DSRM password.",kp07Tip:"DNS Virtual Lab: create the Primary Forward Lookup Zone serverhero.local, add the dc01 A record and test with nslookup.",kp08Tip:"DHCP Virtual Lab: install the role, authorise the server, create a scope, set the range, gateway, DNS and activate the scope.",
 progressText:"Progress is saved automatically on this device."
 }
 };
@@ -52,7 +52,7 @@ const lead=document.querySelector(".kp-lead")?.innerText||document.querySelector
 return (h+". "+lead).trim();
 }
 function tip(){
-const key=context==="kp01"?"kp01Tip":context==="kp02"?"kp02Tip":context==="kp03"?"kp03Tip":context==="kp04"?"kp04Tip":context==="kp05"?"kp05Tip":context==="kp06"?"kp06Tip":context==="kp07"?"kp07Tip":"dashboardTip";
+const key=context==="kp01"?"kp01Tip":context==="kp02"?"kp02Tip":context==="kp03"?"kp03Tip":context==="kp04"?"kp04Tip":context==="kp05"?"kp05Tip":context==="kp06"?"kp06Tip":context==="kp07"?"kp07Tip":context==="kp08"?"kp08Tip":"dashboardTip";
 addMessage(t(key));
 }
 function readPage(){
