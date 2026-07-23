@@ -53,6 +53,7 @@ if(id===6){window.location.href="kp06.html";return}
 if(id===7){window.location.href="kp07.html";return}
 if(id===8){window.location.href="kp08.html";return}
 if(id===9){window.location.href="kp09.html";return}
+if(id===10){window.location.href="kp10.html";return}
 const m=M.find(x=>x.id===id);
 app.innerHTML=`<section class="center"><div class="card hero"><div class="logo">${m.icon}</div><h1>KP${String(id).padStart(2,"0")}</h1><h2>${m[state.lang]}</h2><p>${t("coming")}</p><button class="primary" onclick="renderDashboard()">← Dashboard</button></div></section>`;
 }
