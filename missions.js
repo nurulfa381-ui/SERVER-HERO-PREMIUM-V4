@@ -5,7 +5,7 @@ window.SH_MISSIONS=[
 {id:4,icon:"🛠️",ms:"Alat Penyelenggaraan Server",en:"Server Maintenance Tools"},
 {id:5,icon:"💿",ms:"Pemasangan Windows Server 2019",en:"Windows Server 2019 Installation"},
 {id:6,icon:"🏢",ms:"Active Directory Domain Services",en:"Active Directory Domain Services"},
-{id:7,icon:"📊",ms:"Status Penggunaan Server",en:"Server Usage Status"},
+{id:7,icon:"🌐",ms:"Konfigurasi DNS",en:"DNS Configuration"},
 {id:8,icon:"💾",ms:"Backup Data Server",en:"Server Data Backup"},
 {id:9,icon:"🧩",ms:"Penyelenggaraan Perisian",en:"Software Maintenance"},
 {id:10,icon:"📋",ms:"Rekod Penyelenggaraan",en:"Maintenance Records"}];

@@ -4,4 +4,4 @@ window.SH_BADGES=[
 {id:"first-kt",icon:"✅",ms:"KT Pertama",en:"First KT"},
 {id:"five-kp",icon:"🛡️",ms:"5 KP Selesai",en:"5 KPs Completed"},
 {id:"all-kp",icon:"🏆",ms:"Semua KP Selesai",en:"All KPs Completed"},
-{id:"server-hero",icon:"👑",ms:"Server Hero",en:"Server Hero"},{id:"ad-expert",icon:"🏛️",ms:"Pakar Active Directory",en:"Active Directory Expert"}];
+{id:"server-hero",icon:"👑",ms:"Server Hero",en:"Server Hero"},{id:"ad-expert",icon:"🏛️",ms:"Pakar Active Directory",en:"Active Directory Expert"},{id:"dns-specialist",icon:"🌐",ms:"Pakar DNS",en:"DNS Specialist"}];
