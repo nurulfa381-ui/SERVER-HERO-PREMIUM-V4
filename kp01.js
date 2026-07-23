@@ -190,9 +190,13 @@ let correct=0;
 quiz.forEach((q,i)=>{if(answers[i]===q.a)correct++});
 const score=Math.round(correct/quiz.length*100);
 state.completedKP=state.completedKP||[];
-if(!state.completedKP.includes(1))state.completedKP.push(1);
+const firstCompletion=!state.completedKP.includes(1);
+if(firstCompletion)state.completedKP.push(1);
 state.unlocked=Math.max(state.unlocked||1,2);
-state.xp=(state.xp||0)+100+(correct*20);
+if(firstCompletion){
+state.xp=(state.xp||0)+100+(correct*15);
+state.coins=(state.coins||0)+50;
+}
 state.badges=state.badges||[];
 if(!state.badges.includes("first-kp"))state.badges.push("first-kp");
 SHStorage.save(state);

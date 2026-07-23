@@ -181,9 +181,13 @@ function complete(){
 let correct=0;quiz.forEach((q,i)=>{if(answers[i]===q.a)correct++});
 const score=Math.round(correct/quiz.length*100);
 state.completedKP=state.completedKP||[];
-if(!state.completedKP.includes(4))state.completedKP.push(4);
+const firstCompletion=!state.completedKP.includes(4);
+if(firstCompletion)state.completedKP.push(4);
 state.unlocked=Math.max(state.unlocked||4,5);
+if(firstCompletion){
 state.xp=(state.xp||0)+160+(correct*15);
+state.coins=(state.coins||0)+80;
+}
 state.badges=state.badges||[];
 if(state.completedKP.length>=5&&!state.badges.includes("five-kp"))state.badges.push("five-kp");
 SHStorage.save(state);
