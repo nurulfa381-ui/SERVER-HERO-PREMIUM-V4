@@ -8,4 +8,4 @@ window.SH_MISSIONS=[
 {id:7,icon:"🌐",ms:"Konfigurasi DNS",en:"DNS Configuration"},
 {id:8,icon:"📡",ms:"Konfigurasi DHCP",en:"DHCP Configuration"},
 {id:9,icon:"👥",ms:"Pengurusan Pengguna dan Kumpulan",en:"User and Group Management"},
-{id:10,icon:"💾",ms:"Backup dan Pemulihan Server",en:"Server Backup and Recovery"},{id:11,icon:"📁",ms:"File Server dan Kebenaran Folder",en:"File Server and Folder Permissions"},{id:12,icon:"📜",ms:"Group Policy Object (GPO)",en:"Group Policy Object (GPO)"}];
+{id:10,icon:"💾",ms:"Backup dan Pemulihan Server",en:"Server Backup and Recovery"},{id:11,icon:"📁",ms:"File Server dan Kebenaran Folder",en:"File Server and Folder Permissions"},{id:12,icon:"📜",ms:"Group Policy Object (GPO)",en:"Group Policy Object (GPO)"},{id:13,icon:"👑",ms:"Cabaran Akhir Enterprise",en:"Final Enterprise Challenge"}];

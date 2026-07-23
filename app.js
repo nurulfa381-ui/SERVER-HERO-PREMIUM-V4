@@ -9,6 +9,7 @@ const rank=()=>level()>=10?t("hero"):level()>=7?t("specialist"):level()>=4?t("te
 const progress=()=>Math.round(pass()/10*100);
 if((state.completedKP||[]).includes(10)&&(state.unlocked||0)<11){state.unlocked=11;save();}
 if((state.completedKP||[]).includes(11)&&(state.unlocked||0)<12){state.unlocked=12;save();}
+if((state.completedKP||[]).includes(12)&&(state.unlocked||0)<13){state.unlocked=13;save();}
 
 function renderLanguage(){
 app.innerHTML=`<section class="center"><div class="card hero"><div class="logo">🖥️</div><h1>SERVER HERO™</h1><p>V4 PREMIUM</p><h2>${TXT.ms.choose}<br><small>${TXT.en.choose}</small></h2><div class="lang-grid"><button onclick="choose('ms')">🇲🇾<b>${TXT.ms.bm}</b></button><button class="en" onclick="choose('en')">🇬🇧<b>${TXT.en.en}</b></button></div></div></section>`;
@@ -58,6 +59,7 @@ if(id===9){window.location.href="kp09.html";return}
 if(id===10){window.location.href="kp10.html";return}
 if(id===11){window.location.href="kp11.html";return}
 if(id===12){window.location.href="kp12.html";return}
+if(id===13){window.location.href="kp13.html";return}
 const m=M.find(x=>x.id===id);
 app.innerHTML=`<section class="center"><div class="card hero"><div class="logo">${m.icon}</div><h1>KP${String(id).padStart(2,"0")}</h1><h2>${m[state.lang]}</h2><p>${t("coming")}</p><button class="primary" onclick="renderDashboard()">← Dashboard</button></div></section>`;
 }
