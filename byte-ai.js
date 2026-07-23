@@ -12,7 +12,7 @@ placeholder:"Taip soalan ringkas...",send:"Hantar",
 unknown:"Saya belum mempunyai jawapan khusus untuk itu. Cuba pilih Tip atau Baca Halaman.",
 dashboardTip:"Mulakan dengan KP yang berstatus TERBUKA. Selesaikan aktiviti dan kuiz untuk membuka misi seterusnya.",
 kp01Tip:"Fokus pada Tag/ID server, spesifikasi, sistem operasi, waranti dan manual operasi.",
-kp02Tip:"Bezakan penyelenggaraan pencegahan, pembetulan dan ramalan. Jangan lupa backup dan rekod.",kp03Tip:"Fokus pada kawalan akses, suhu, kelembapan, kebakaran, UPS dan prosedur kecemasan.",kp04Tip:"Pilih alat mengikut tugas. Utamakan ESD, shutdown selamat dan jangan paksa komponen.",
+kp02Tip:"Bezakan penyelenggaraan pencegahan, pembetulan dan ramalan. Jangan lupa backup dan rekod.",kp03Tip:"Fokus pada kawalan akses, suhu, kelembapan, kebakaran, UPS dan prosedur kecemasan.",kp04Tip:"Pilih alat mengikut tugas. Utamakan ESD, shutdown selamat dan jangan paksa komponen.",kp05Tip:"Ikut urutan pemasangan: boot media, bahasa, edisi, Custom Installation, partisi dan kata laluan Administrator.",
 progressText:"Kemajuan disimpan secara automatik pada peranti ini."
 },
 en:{
@@ -23,7 +23,7 @@ placeholder:"Type a short question...",send:"Send",
 unknown:"I do not have a specific answer for that yet. Try Tip or Read Page.",
 dashboardTip:"Start with a mission marked AVAILABLE. Complete its activity and quiz to unlock the next mission.",
 kp01Tip:"Focus on the server Tag/ID, specifications, operating system, warranty and operating manual.",
-kp02Tip:"Distinguish preventive, corrective and predictive maintenance. Remember backups and records.",kp03Tip:"Focus on access control, temperature, humidity, fire safety, UPS and emergency procedures.",kp04Tip:"Select tools according to the task. Prioritise ESD protection, safe shutdown and never force components.",
+kp02Tip:"Distinguish preventive, corrective and predictive maintenance. Remember backups and records.",kp03Tip:"Focus on access control, temperature, humidity, fire safety, UPS and emergency procedures.",kp04Tip:"Select tools according to the task. Prioritise ESD protection, safe shutdown and never force components.",kp05Tip:"Follow the installation order: boot media, language, edition, Custom Installation, partition and Administrator password.",
 progressText:"Progress is saved automatically on this device."
 }
 };
@@ -52,7 +52,7 @@ const lead=document.querySelector(".kp-lead")?.innerText||document.querySelector
 return (h+". "+lead).trim();
 }
 function tip(){
-const key=context==="kp01"?"kp01Tip":context==="kp02"?"kp02Tip":context==="kp03"?"kp03Tip":context==="kp04"?"kp04Tip":"dashboardTip";
+const key=context==="kp01"?"kp01Tip":context==="kp02"?"kp02Tip":context==="kp03"?"kp03Tip":context==="kp04"?"kp04Tip":context==="kp05"?"kp05Tip":"dashboardTip";
 addMessage(t(key));
 }
 function readPage(){
