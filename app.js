@@ -44,13 +44,13 @@ app.innerHTML=`<div class="shell ${state.projector?"projector":""}">
 </div>`;
 }
 function openMission(id){
-if(id===1){window.location.href="modules/kp01/index.html";return}
-if(id===2){window.location.href="modules/kp02/index.html";return}
-if(id===3){window.location.href="modules/kp03/index.html";return}
-if(id===4){window.location.href="modules/kp04/index.html";return}
-if(id===5){window.location.href="modules/kp05/index.html";return}
-if(id===6){window.location.href="modules/kp06/index.html";return}
-if(id===7){window.location.href="modules/kp07/index.html";return}
+if(id===1){window.location.href="kp01.html";return}
+if(id===2){window.location.href="kp02.html";return}
+if(id===3){window.location.href="kp03.html";return}
+if(id===4){window.location.href="kp04.html";return}
+if(id===5){window.location.href="kp05.html";return}
+if(id===6){window.location.href="kp06.html";return}
+if(id===7){window.location.href="kp07.html";return}
 const m=M.find(x=>x.id===id);
 app.innerHTML=`<section class="center"><div class="card hero"><div class="logo">${m.icon}</div><h1>KP${String(id).padStart(2,"0")}</h1><h2>${m[state.lang]}</h2><p>${t("coming")}</p><button class="primary" onclick="renderDashboard()">← Dashboard</button></div></section>`;
 }
