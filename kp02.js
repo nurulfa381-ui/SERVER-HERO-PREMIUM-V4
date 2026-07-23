@@ -113,6 +113,7 @@ app.innerHTML=`<div class="kp-shell">
 <div class="kp-hero-icon">${s.icon}</div>
 <h1>${s.title[lang]}</h1>
 <p class="kp-lead">${s.lead[lang]}</p>
+${step===0?`<div class="story-alert"><strong>${lang==="ms"?"🚨 Mission Briefing":"🚨 Mission Briefing"}</strong>${lang==="ms"?"Sebuah server kritikal menunjukkan prestasi tidak stabil. Anda ditugaskan memilih tindakan penyelenggaraan yang selamat dan sistematik.":"A critical server is showing unstable performance. You are assigned to select safe and systematic maintenance actions."}</div>`:""}
 ${s.activity?renderActivity():s.quiz?renderQuiz():s.body()}
 <div id="feedback" class="feedback"></div>
 <div class="kp-nav"><button class="secondary" onclick="previous()" ${step===0?"disabled":""}>← ${lang==="ms"?"Sebelumnya":"Previous"}</button><button onclick="next()">${step===slides.length-1?(lang==="ms"?"SELESAIKAN KP":"COMPLETE KP"):(lang==="ms"?"Seterusnya":"Next")} →</button></div>

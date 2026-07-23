@@ -114,6 +114,7 @@ app.innerHTML=`<div class="kp-shell">
 <div class="kp-hero-icon">${s.icon}</div>
 <h1>${s.title[lang]}</h1>
 <p class="kp-lead">${s.lead[lang]}</p>
+${step===0?`<div class="story-alert"><strong>${lang==="ms"?"🚨 Mission Briefing":"🚨 Mission Briefing"}</strong>${lang==="ms"?"Pusat data mengesan rekod server yang tidak lengkap. Anda perlu mengenal pasti server dengan betul sebelum penyelenggaraan boleh dimulakan.":"The data centre has detected incomplete server records. You must identify the server correctly before maintenance can begin."}</div>`:""}
 ${s.activity?renderActivity():s.quiz?renderQuiz():s.body()}
 <div id="feedback" class="feedback"></div>
 <div class="kp-nav">
