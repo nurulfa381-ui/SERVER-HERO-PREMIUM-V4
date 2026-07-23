@@ -1,11 +1,62 @@
-window.SH_MISSIONS=[
-{id:1,icon:"🖥️",ms:"Analisis Maklumat Server",en:"Server Information Analysis"},
-{id:2,icon:"🧰",ms:"Penyelenggaraan Server",en:"Server Maintenance"},
-{id:3,icon:"🔐",ms:"Keselamatan Bilik Server",en:"Server Room Safety"},
-{id:4,icon:"🛠️",ms:"Alat Penyelenggaraan Server",en:"Server Maintenance Tools"},
-{id:5,icon:"💿",ms:"Pemasangan Windows Server 2019",en:"Windows Server 2019 Installation"},
-{id:6,icon:"🏢",ms:"Active Directory Domain Services",en:"Active Directory Domain Services"},
-{id:7,icon:"🌐",ms:"Konfigurasi DNS",en:"DNS Configuration"},
-{id:8,icon:"📡",ms:"Konfigurasi DHCP",en:"DHCP Configuration"},
-{id:9,icon:"👥",ms:"Pengurusan Pengguna dan Kumpulan",en:"User and Group Management"},
-{id:10,icon:"💾",ms:"Backup dan Pemulihan Server",en:"Server Backup and Recovery"},{id:11,icon:"📁",ms:"File Server dan Kebenaran Folder",en:"File Server and Folder Permissions"},{id:12,icon:"📜",ms:"Group Policy Object (GPO)",en:"Group Policy Object (GPO)"},{id:13,icon:"👑",ms:"Cabaran Akhir Enterprise",en:"Final Enterprise Challenge"}];
+window.SH_MISSIONS = [
+  {
+    id: 1,
+    icon: "🖥️",
+    ms: "Pengenalan Kepada Analisis Maklumat Server",
+    en: "Introduction to Server Information Analysis"
+  },
+  {
+    id: 2,
+    icon: "🧰",
+    ms: "Mengenalpasti Penyelenggaraan Server",
+    en: "Identifying Server Maintenance"
+  },
+  {
+    id: 3,
+    icon: "🔐",
+    ms: "Keselamatan Bilik Server",
+    en: "Server Room Safety"
+  },
+  {
+    id: 4,
+    icon: "🛠️",
+    ms: "Mengenalpasti Alat Penyelenggaraan Server",
+    en: "Identifying Server Maintenance Tools"
+  },
+  {
+    id: 5,
+    icon: "🔌",
+    ms: "Pengenalan Kepada Periperal Server",
+    en: "Introduction to Server Peripherals"
+  },
+  {
+    id: 6,
+    icon: "💡",
+    ms: "Mengenalpasti Status Penunjuk LED Server",
+    en: "Identifying Server LED Indicators"
+  },
+  {
+    id: 7,
+    icon: "📊",
+    ms: "Pengenalan Kepada Status Penggunaan Server",
+    en: "Introduction to Server Usage Status"
+  },
+  {
+    id: 8,
+    icon: "💾",
+    ms: "Proses Back-up Data Server",
+    en: "Server Data Backup Process"
+  },
+  {
+    id: 9,
+    icon: "🧩",
+    ms: "Penyelenggaraan Perisian Server",
+    en: "Server Software Maintenance"
+  },
+  {
+    id: 10,
+    icon: "📋",
+    ms: "Rekod Penyelenggaraan Server",
+    en: "Server Maintenance Records"
+  }
+];
