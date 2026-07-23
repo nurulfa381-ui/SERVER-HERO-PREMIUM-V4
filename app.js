@@ -38,6 +38,7 @@ app.innerHTML=`<div class="shell ${state.projector?"projector":""}">
 function openMission(id){
 if(id===1){window.location.href="kp01.html";return}
 if(id===2){window.location.href="kp02.html";return}
+if(id===3){window.location.href="kp03.html";return}
 const m=M.find(x=>x.id===id);
 app.innerHTML=`<section class="center"><div class="card hero"><div class="logo">${m.icon}</div><h1>KP${String(id).padStart(2,"0")}</h1><h2>${m[state.lang]}</h2><p>${t("coming")}</p><button class="primary" onclick="renderDashboard()">← Dashboard</button></div></section>`;
 }
